@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>复赛A题 · 作战规划（修正版v2） — DATA2600953</title>
+<title>复赛A题 · 作战规划（v3验证锁定版） — DATA2600953</title>
 <style>
   :root{
     --ink:#1a2332; --sub:#5a6b82; --line:#dfe6f0; --bg:#f4f7fb;
@@ -105,13 +105,14 @@
 <div class="wrap">
 
 <header class="hero">
-  <span class="tagline">2026 第五届“创新杯”大学生大数据挑战赛 · 复赛A题 · 规划修正版 v2</span>
+  <span class="tagline">2026 第五届“创新杯”大学生大数据挑战赛 · 复赛A题 · 规划 v3（验证锁定版）</span>
   <h1>复赛A题 · 作战规划</h1>
   <div class="sub">健康生活方式与早起习惯数据分析（回归三任务）&nbsp;—&nbsp;队伍 DATA2600953</div>
   <div class="meta">
     <span><b>赛程：</b>8月28日 09:00 – 8月31日 09:00</span>
     <span><b class="warn" style="color:#ffd9d9">提交通道：8/31 早 9 点关闭（硬截止）</b></span>
     <span><b>策略：</b>8/30 晚提交保底包，8/31 09:00 前仅应急替换</span>
+    <span><b>验证：</b>三任务全部锁定（T1 0.6825 / T2 0.6244 / T3 0.9801）</span>
     <span><b>环境：</b>PyCharm 2026.1.2 + Python 3.14</span>
     <span><b>初赛战绩：</b>95.20 / 100（已晋级）</span>
   </div>
@@ -125,13 +126,13 @@
     <tr><td><b>任务类型</b></td><td>三任务回归（题目背景"分类任务"系初赛沿袭表述，以任务条款为准）</td><td>三个连续数值目标的精准预测</td></tr>
     <tr><td><b>任务一</b></td>
         <td>预测 <span class="hl">Sleep_Quality_Score</span>——<b>仅使用非睡眠类特征</b>（不能直接用 Sleep Duration 等直接描述睡眠的字段），报告决定系数 R²₁</td>
-        <td>特征域白名单今晚拍板（见§三阶段0）；提交口径按 R²</td></tr>
+        <td>特征域已定稿：B档（非睡眠+分项评分）锁定=0.6825，C档双轨呈现（见§四T1）；提交口径按 R²</td></tr>
     <tr><td><b>任务二</b></td>
         <td>预测 <span class="hl">Productivity_Score</span>——需<b>处理特征间多重共线性</b>，解释哪些因素对提升精力贡献最大，报告调整决定系数 adjust-R²₂</td>
-        <td>VIF诊断已完成（条件数1038，3个结构性共线组）；报告口径按调整R²，解释做三通道+簇级贡献+PDP</td></tr>
+        <td>VIF诊断已完成（条件数1038，3个结构性共线组，剪枝后R²=0.6229不掉精度）；模型已锁定 Lasso(α=0.01)=0.6244；报告口径按调整R²，解释做三通道+簇级贡献+PDP，Early_Waker驱动因素进摘要</td></tr>
     <tr><td><b>任务三</b></td>
         <td>预测 <span class="hl">Health_Score</span>——使用<b>全部有效特征</b>，鼓励深度学习或堆叠（Stacking），报告决定系数 R²₃</td>
-        <td>精确公式搜索→堆叠（SVR进Level-0，NNLS做Level-1），双轨对照</td></tr>
+        <td>精确公式搜索已排除生成式→Stacking池A（RidgeCV+HistGB+LGBM+SVR，Level-1简单Ridge）已锁定=0.9801，双轨对照</td></tr>
     <tr><td><b>评估与排名</b></td><td>组委会在<b>参赛选手提交的测试集</b>上评估各任务的回归（调整）决定系数；赛题<b>未给出任务权重</b></td>
         <td>按等权重准备，论文中不编造权重；测试集由我方自封（8000/2000分层划分，seed=42），规则完全契合</td></tr>
     <tr><td><b>数据</b></td><td>10000×64，与初赛数据<b>完全一致</b>（逐行逐列核对 0 处差异）</td>
@@ -140,7 +141,7 @@
     <tr><td><b>每任务要求</b></td><td>模型代码 + 预测CSV（Person ID/真值/预测值）+ 建模报告（<b>特征重要性分析、明显指向性、强相关、泄漏特征剔除思路、模型选择依据及调参过程</b>）</td><td>建模报告固定四段结构（§五），CSV内容为自封2000行测试集</td></tr>
     <tr><td><b>纪律红线</b></td><td>自行划分训练/验证集，<b class="warn">禁止使用测试集真值进行任何训练或超参选择</b></td><td>测试真值仅在8/30下午终评脚本中出现一次；封存记录可查</td></tr>
   </table>
-  <div class="note"><b>题目背景中的评审关注点：</b>原文明示竞赛旨在锻炼<b>特征工程、模型调优及数据洞察</b>三项能力——论文结构需围绕这三条主线组织（特征工程章=块消融+泄漏审查；模型调优章=矩阵+Optuna收敛判据；数据洞察章=泄漏地图+生成机制诊断+SHAP解释），让评审逐条对得上。</div>
+  <div class="note"><b>题目背景中的评审关注点：</b>原文明示竞赛旨在锻炼<b>特征工程、模型调优及数据洞察</b>三项能力——论文结构需围绕这三条主线组织（特征工程章=块消融+泄漏审查；模型调优章=模型矩阵+调参搜索与收敛判据（结论：T1/T2无空间、T3微升，被拒候选矩阵即调参过程证据）；数据洞察章=泄漏地图+生成机制诊断+SHAP解释），让评审逐条对得上。</div>
 </section>
 
 <!-- ================= 二、方法论 ================= -->
@@ -159,12 +160,12 @@
         <td>块保留 2×CVstd、调参收敛 1×CVstd、融合 +0.5pp、CV→Test≤3pp 纪律全部沿用R²尺度</td></tr>
     <tr><td><b>⑤ 线性结构诊断</b></td><td>初赛（已验证）</td>
         <td>摸底证实：T1线性族碾压树族（B档Ridge 0.674 vs 树0.640）；T2线性微优；T3树族在A/C档反超（HistGB 0.977）——分任务选模型，不搞一刀切</td></tr>
-    <tr><td><b>⑥ 0.1网格后处理</b></td><td>复赛新武器</td>
-        <td>三个目标全部落在0.1网格上（唯一值89/71/617）。预测值 clip 到值域 + round 到0.1网格，CV内验证有效才锁定——白捡的精度</td></tr>
-    <tr><td><b>⑦ 生成机制探针</b></td><td>复赛新武器</td>
-        <td>T1：Sleep_Quality对评分列OLS（判定评分列是否为"确定性成分"）；T3：Lasso/子集回归精确公式搜索（若找到R²→1.0的生成式，直接使用并如实声明，胜过任何堆叠）</td></tr>
-    <tr><td><b>⑧ 二阶交互扩展</b></td><td>初赛LR_quad复赛加强版</td>
-        <td>top-10特征的二次交互喂给Ridge——树模型全线跑输线性说明信号以线性加性为主，二次项比调参更可能出增量</td></tr>
+    <tr><td><b>⑥ 0.1网格后处理</b></td><td>复赛新武器 → <b class="warn">已实测无效，放弃</b></td>
+        <td>三目标虽落在0.1网格（唯一值89/71/617），但 clip+round 实测净增益仅 +0.0001（线性预测本就贴近网格）——按纪律放弃，不再投入时间</td></tr>
+    <tr><td><b>⑦ 生成机制探针</b></td><td>复赛新武器 → <b>已出结论</b></td>
+        <td>T1：9个非睡眠评分列对 Sleep_Quality OLS R²=0.52——排除确定性生成（安全性两段论之①，真正依据是逐列消融）；T3：12个评分/综合列OLS R²=0.9397（Healthy_Aging_Score留一贡献0.0717独大），无R²→1.0精确公式——堆叠是正确路线，0.9397须在论文正面呈现</td></tr>
+    <tr><td><b>⑧ 二阶交互扩展</b></td><td>初赛LR_quad复赛加强版 → <b>已锁定</b></td>
+        <td>top-10交互(i&lt;j)=0.6815（配对t p=0.0074，5/5折全胜）→ 含平方项=0.6825（p=0.0169，5/5折全胜）；3种子15折复核0.6817±0.0110、最差折0.6628，跨种子稳定；KernelRidge(RBF)=0.6162惨败——非线性结构很浅，线性+适度交互即正确容量，不再试核方法</td></tr>
   </table>
 </section>
 
@@ -190,16 +191,15 @@
         <ul><li>复赛数据集深度EDA + 泄漏地图 F1–F6 重建（与初赛结论一致）</li>
         <li>多模型摸底测试：3任务 × 3特征档 × 14模型 × 5折CV，最优方案已出（检测报告）</li>
         <li>任务二 VIF 共线性诊断：条件数1038，Sleep_Time VIF=73,275 / Weight_kg 96.9 / Health_Score 30.7 三个结构性共线组</li>
+        <li>三任务验证实验全部完成（8/28晚）：T1 锁定 Ridge+top10交互（含平方）=0.6825；T2 封盘 Lasso(α=0.01)（B档+Early_Waker）=0.6244；T3 锁定 Stacking 池A 0.9801（3种子0.9801±0.0008，扩池B被2×CVstd闸门拒绝）</li>
         <li>8000/2000 分层划分封存（split/，测试集零触碰）</li></ul>
       </div></div>
       <div class="slot"><div class="t">今晚必做</div><div class="c">
-        <ul><li><b>T1 特征域白名单定稿</b>（不缺数据只缺拍板，不要占用Day 1上午）：
-            <span class="hl">白名单</span>=剔除8类睡眠域列（Wake/Sleep时间、睡眠时长、夜间醒来、周末差异、午睡、睡前屏幕、睡眠障碍风险）；
-            <span class="hl">灰色名单</span>=Early_Waker（起床派生）+ 全部评分列（Fatigue/Mood/Energy/Productivity等——Fatigue与睡眠的语义距离比Early_Waker更近）+ 综合列（Health_Score/Wellness_Category/Fitness_Level/Healthy_Aging_Score）；
-            灰名单处置=双轨对照+生成机制探针（评分列对目标OLS），结论写入论文"泄漏特征剔除思路"段</li>
-        <li><b>15分钟规则确认</b>：通读《论文格式规范及提交流程》全文（要点：截止8/31 09:00、摘要首页≤1页、页眉 Team# DATA2600953 page X of Y、正文≤30页、中文、三部分分别上传、命名格式、可重复提交、备用邮箱）</li>
-        <li>按本规划锁定 Day 1 起跑的模型短名单：T1={Ridge,Lasso,ElasticNet,HistGB}+二次项扩展；T2={Lasso,Ridge,ElasticNet,ExtraTrees,HistGB}；T3={HistGB,XGB,LGBM,SVR,线性族}+公式搜索</li></ul>
-        <span class="out">产出：T1特征域决策记录（白/灰/黑三档+依据）</span><span class="out">产出：规则确认清单</span>
+        <ul><li><b>T1 特征域已定稿（B档锁定）</b>：白名单=剔除8类睡眠域列（Wake/Sleep时间、睡眠时长、夜间醒来、周末差异、午睡、睡前屏幕、睡眠障碍风险）+ 分项评分列；综合列（Health_Score/Wellness_Category/Fitness_Level/Healthy_Aging_Score）与Early_Waker仍列灰色名单、双轨对照。验证结论：C档+9pp逐列消融全部来自Health_Score(+0.090)/Healthy_Aging_Score(+0.057)——目标藏在特征里的灰色泄漏，排除判断正确</li>
+        <li><b>规则原文摘录</b>（20分钟）：《格式规范》中 T1 特征域限制条款逐字摘入决策记录——这是 B档主提交 vs C档+9pp 的战略决策依据（若规则明文允许综合列且纯榜单制，另备C档变体包，团队拍板；默认B档主提交）；同时确认截止8/31 09:00、摘要首页≤1页、页眉格式、正文≤30页、命名格式、可重复提交、备用邮箱</li>
+        <li><b>T2 Early_Waker 马甲检查</b>（20分钟）：确认该列为原始问卷条目、非目标成分派生（+4pp对单个二值特征偏大，必须排除"目标马甲"后再进摘要）</li>
+        <li>Day 1 起跑线按锁定表落码：T1={Ridge+top10交互含平方}；T2={Lasso(α=0.01)，封盘不再跑矩阵}；T3={Stacking池A，已锁定}——三任务建模全部封盘，Day 1 建模时间只留给 B2–B6 块消融</li></ul>
+        <span class="out">产出：T1特征域决策记录（含逐列消融证据）</span><span class="out">产出：规则确认清单（含T1特征域条款原文）</span><span class="out">产出：Early_Waker马甲检查记录</span>
       </div></div>
     </div>
   </div>
@@ -211,22 +211,22 @@
     <div class="dayhead"><span class="dn">Day 1 · 双任务建模日</span><span class="dd">2026-08-29 — T1 睡眠质量 + T2 生产力</span></div>
     <div class="daybody">
       <div class="slot"><div class="t">上午</div><div class="c">
-        <b>T1 睡眠质量量化评估</b>
-        <ul><li>按昨晚白名单跑基线复核（B档口径：非睡眠特征+分项评分）</li>
-        <li><b>生成机制探针</b>：Sleep_Quality_Score 对9个评分列 OLS——判定评分列是否构成确定性成分，结论进"泄露剔除思路"段</li>
-        <li>工程特征块复用初赛六块31个（剔除睡眠域块），逐块消融（2×CVstd判据）</li></ul>
+        <b>T1 睡眠质量落码（锁定配置复现）</b>
+        <ul><li>基线复核与生成机制探针已由验证完成（9评分列OLS R²=0.52，排除确定性生成；逐列消融：C档+9pp全部来自Health_Score +0.090/Healthy_Aging_Score +0.057，B档列零携带）——结论直接写入论文"泄漏特征剔除思路"段</li>
+        <li>锁定模型落码：B档 Ridge + top10交互（含平方）=0.6825；alpha网格复核+3种子15折复核（0.6817±0.0110）</li>
+        <li>工程特征块 B2–B6 折内消融（生理比率/生活指数/风险聚合31个特征回归版）——<b>全轮验证后唯一未测的真实空间</b>，可能再挤0.5–1pp；限时4小时封顶，配对t判据，超时回退锁定配置</li></ul>
       </div></div>
       <div class="slot"><div class="t">下午</div><div class="c">
-        <b>T1 二阶交互 + T2 共线性建模</b>
-        <ul><li>T1 二次交互扩展：top-10特征两两交互项喂给Ridge（初赛LR_quad已验证的路线，回归版放大收益）</li>
-        <li>T1 0.1网格后处理：clip到[1.0,9.8]+round 0.1，CV内验证净增益后锁定</li>
-        <li>T2 共线性处置落码：时间组保留Wake_Up_Time+Sleep_Duration（弃Sleep_Time）；体格组保留BMI；综合列双轨（含/不含Health_Score）</li>
-        <li>T2 模型矩阵：Lasso/Ridge/ElasticNet/ExtraTrees/HistGB 5折CV（调整R²口径）</li></ul>
+        <b>T1 收尾 + T2 报告写作（模型已封盘）</b>
+        <ul><li>T1 交互已锁定（0.6825），不再跑候选矩阵；0.1网格后处理实测无效（+0.0001）已放弃；线性四模型融合+0.01pp不显著（p=0.11）不做</li>
+        <li>T2 落码：Lasso（B档+Early_Waker，与C档持平，四综合列零权重），3种子复核0.6247±0.0152</li>
+        <li>T2 共线性证据整理：VIF剪枝后0.6229不掉精度；时间组/体格组/综合列三组处置记录成文</li>
+        <li>T2 驱动因素解释写作：Early_Waker（逐列消融+0.040，<b>进摘要</b>）、Energy_Level、Fatigue、睡眠时长剂量-效应PDP——相关性措辞，不写因果</li></ul>
       </div></div>
       <div class="slot"><div class="t">晚上</div><div class="c">
-        <ul><li>T1/T2 短名单 Optuna 调参（TPESampler，50 trials，收敛判据=末20trials提升&lt;1×CVstd）</li>
-        <li>论文骨架：摘要框架、第2章数据描述与EDA（泄漏地图直接入章，突出<b>数据洞察</b>）、T1/T2建模章节初稿</li></ul>
-        <span class="out">产出：T1/T2调参记录+锁定配置</span><span class="out">产出：论文第2-3章初稿</span>
+        <ul><li>调参已实测无空间（T1 alpha网格最优0.6747≈基线0.6744；T2 ElasticNet 0.6245≈0.6243）——跳过Optuna，省下时间写论文</li>
+        <li>论文骨架：摘要框架（T2 Early_Waker发现进摘要、T1双轨诚信叙事、三任务统一采纳判据）、第2章数据描述与EDA（泄漏地图直接入章，突出<b>数据洞察</b>）、T1/T2建模章节初稿</li></ul>
+        <span class="out">产出：T1/T2锁定配置复现记录</span><span class="out">产出：论文第2-3章初稿</span>
       </div></div>
     </div>
   </div>
@@ -235,13 +235,13 @@
 <!-- ===== Day 2 ===== -->
 <section>
   <div class="daycard">
-    <div class="dayhead d2"><span class="dn">Day 2 · 终极任务日 + 首次提交日</span><span class="dd">2026-08-30 — T3 建模 → 终评 → 保底包提交</span></div>
+    <div class="dayhead d2"><span class="dn">Day 2 · 论文定稿日 + 首次提交日</span><span class="dd">2026-08-30 — 论文收尾 → 终评 → 保底包提交</span></div>
     <div class="daybody">
       <div class="slot"><div class="t">上午</div><div class="c">
-        <b>T3 综合健康评分终极预测</b>
-        <ul><li><b>精确公式搜索（1-2小时，先于堆叠）</b>：Lasso/子集回归在评分列上搜索 Health_Score 的精确生成式——若找到 R²→1.0 组合，直接使用并如实声明（T3明确允许所有有效特征），胜过任何堆叠；找不到再进入堆叠</li>
-        <li>堆叠方案：Level-0={Ridge, ElasticNet, HistGB, XGB, LGBM, <b>SVR</b>（B档第一0.9177，必进）, MLP}，Level-1={Ridge, <b>非负最小二乘NNLS</b>（权重可解释性更好）}，折外预测生成Level-1输入</li>
-        <li>clip到[27.3,100]+round 0.1 后处理验证</li></ul>
+        <b>T3 已锁定（8/28晚）+ 论文收尾</b>
+        <ul><li>精确公式搜索已由验证完成：12个评分/综合列OLS仅0.9397（Healthy_Aging_Score留一贡献0.0717独大），无R²→1.0生成式；0.9397须在论文<b>正面呈现</b>，附剔除Healthy_Aging列的稳健性对照</li>
+        <li>T3 终检结论：Stacking 池A（RidgeCV+HistGB+LGBM+SVR，折内OOF）=0.9801；3种子15折复核0.9801±0.0008（最差折0.9788，每种子稳赢HistGB）；<b>扩池B(+ExtraTrees+XGB)=0.9804被拒</b>——Δ=+0.0003未过2×CVstd噪声闸门（0.0012），不为统计显著的噪声多付50%训练时间；HistGB absolute_error 0.9768拒（squared loss与R²对齐）</li>
+        <li>论文第4-5章写作：<b>模型选择依据 + 调参过程</b>——被拒实验矩阵（KernelRidge/样条/扩池/absolute_error）就是这两段的素材；两道闸门纪律（逐折配对t + 3种子复核）写成方法论章节</li></ul>
       </div></div>
       <div class="slot"><div class="t">下午</div><div class="c">
         <b>测试集终评（本日唯一一次触碰测试真值）+ 预测CSV生成</b>
@@ -281,34 +281,34 @@
   <h2>四、各任务技术路线（分步骤）</h2>
   <h3><span class="no">T1</span>睡眠质量量化评估（非睡眠特征 → Sleep_Quality_Score，R²）</h3>
   <div class="stepflow">
-    <span class="s">1. 特征域三档定稿（今晚）</span><span class="arrow">→</span>
-    <span class="s">2. 生成机制探针（评分列OLS）</span><span class="arrow">→</span>
-    <span class="s">3. 块消融+二阶交互</span><span class="arrow">→</span>
-    <span class="s">4. 模型矩阵+Optuna</span><span class="arrow">→</span>
-    <span class="s">5. 0.1网格后处理（CV验证）</span><span class="arrow">→</span>
+    <span class="s">1. 特征域B档定稿（已定）</span><span class="arrow">→</span>
+    <span class="s">2. 生成机制探针（已做：OLS R²=0.52）</span><span class="arrow">→</span>
+    <span class="s">3. 交互锁定（已做：0.6825）</span><span class="arrow">→</span>
+    <span class="s">4. B2–B6块消融（限时4h）</span><span class="arrow">→</span>
+    <span class="s">5. 3种子复核（已做：0.6817±0.0110）</span><span class="arrow">→</span>
     <span class="s">6. SHAP+报告</span>
   </div>
-  <p>摸底依据：B档 Ridge CV R²=0.6744（树族最优HistGB 0.6396，线性领先+0.035）；心理评分列贡献+0.52 R²（纯生活习惯A档仅0.158）——"睡眠质量主要由生活习惯与心理状态驱动"是任务一的题眼结论，论文"数据洞察"章重点写。预期增量：调参+二次交互+后处理。</p>
+  <p>锁定依据：B档 Ridge 基线0.6744 → top10交互0.6815（配对t p=0.0074）→ 含平方项0.6825（p=0.0169），两步均5/5折全胜；3种子15折复核0.6817±0.0110（最差折0.6628）跨种子稳定。调参无空间（alpha网格0.6747≈基线）、clip+round无效（+0.0001）、KernelRidge惨败0.6162——容量已对，不再加复杂度。<b>安全性两段论：</b>① 生成性检验：9个非睡眠评分列对目标OLS R²仅0.52，排除确定性生成；② 逐列消融：C档+9pp全部来自Health_Score(+0.090)/Healthy_Aging_Score(+0.057)两个嵌入睡眠成分的综合列，B档9列零携带——B档主提交合规站得住，C档结果双轨写入论文。B档较A档提升+0.516（A档仅0.158）："睡眠质量主要由生活习惯与心理状态驱动"是题眼结论。</p>
 
   <h3><span class="no">T2</span>工作效率与活力的驱动因素建模（→ Productivity_Score，调整R²）</h3>
   <div class="stepflow">
-    <span class="s">1. 共线性处置（3个共线组落码）</span><span class="arrow">→</span>
-    <span class="s">2. 正则化族矩阵（调整R²口径）</span><span class="arrow">→</span>
-    <span class="s">3. 树族对照</span><span class="arrow">→</span>
-    <span class="s">4. 调参+seed复核</span><span class="arrow">→</span>
+    <span class="s">1. 共线性处置（已做：VIF剪枝0.6229不掉精度）</span><span class="arrow">→</span>
+    <span class="s">2. 模型封盘（已做：Lasso 0.6244）</span><span class="arrow">→</span>
+    <span class="s">3. 3种子复核（已做：0.6247±0.0152）</span><span class="arrow">→</span>
+    <span class="s">4. Early_Waker马甲检查（今晚）</span><span class="arrow">→</span>
     <span class="s">5. 解释三通道+簇级贡献+PDP</span>
   </div>
-  <p>摸底依据：C档 Lasso CV R²=0.6243（调整R² 0.6092）；调整R²与R²在n=10000、p≈50时仅差约0.5%，<b>不必过度着墨</b>——精力放在共线性处理与解释上。<b>解释是这题的得分点：</b>①Ridge系数+SHAP+置换重要性三通道；②共线簇级贡献（Energy/Fatigue/Mood簇内相关0.4–0.6，单列系数不稳定，报簇合计更稳健）；③剂量-效应结论（"每日步数+1000 → 生产力+X"）用PDP支撑。Health_Score含/不含双轨，论文写清取舍。</p>
+  <p>锁定依据：Lasso（B档+Early_Waker）=<b>0.6244</b>，与C档（0.6243）持平——逐列消融证明C-B增益全部来自Early_Waker一列（+0.040），Health_Score等四综合列Lasso零权重；3种子复核0.6247±0.0152稳定。<b>封盘声明：</b>五个增强候选（交互/平方/样条/评分列二阶）全部落在±0.0001噪声级，无一显著——0.6244已触及该任务信号上限，剩余分数在报告里不在模型里。<b>调整R²口径修正：</b>惩罚项在n=10000、p=62时仅约0.002（含工程特征p≈400时约0.015）——模型选择结论不受影响，论文统一口径并注明p。<b>解释是这题的得分点：</b>①Early_Waker驱动因素结论进摘要（相关性措辞，不写因果）；②三通道（Ridge系数+SHAP+置换）+共线簇级贡献（Energy/Fatigue/Mood簇内相关0.4–0.6，报簇合计）；③剂量-效应结论用PDP支撑。Health_Score含/不含双轨写清取舍。</p>
 
   <h3><span class="no">T3</span>综合健康评分的终极预测（全特征 → Health_Score，R²）</h3>
   <div class="stepflow">
-    <span class="s">1. 精确公式搜索（1-2h，先于堆叠）</span><span class="arrow">→</span>
-    <span class="s">2. 未果→堆叠（SVR/NNLS加强）</span><span class="arrow">→</span>
-    <span class="s">3. 无派生消融（科学赛道）</span><span class="arrow">→</span>
-    <span class="s">4. clip[27.3,100]后处理</span><span class="arrow">→</span>
-    <span class="s">5. seed复核+锁定</span>
+    <span class="s">1. 精确公式搜索（已做：0.9397≠1，无生成式）</span><span class="arrow">→</span>
+    <span class="s">2. 堆叠池A锁定（0.9801，2×CVstd）</span><span class="arrow">→</span>
+    <span class="s">3. 3种子复核（已做：0.9801±0.0008）</span><span class="arrow">→</span>
+    <span class="s">4. 无派生消融（科学赛道）</span><span class="arrow">→</span>
+    <span class="s">5. 落码+锁定</span>
   </div>
-  <p>摸底依据：C档 HistGB CV R²=0.9771（前5名差距0.001–0.005=噪声量级，锁定前必须seed复核/配对检验）；in-sample OLS 96.7% 说明残差中可能仍含确定性成分——公式搜索若命中R²→1.0生成式则直接使用（T3明确允许所有有效特征，如实声明即可），命中不了再堆叠。无派生A/B档（0.849/0.918）是行为特征真实预测能力的科学结论，双轨对照写入论文。</p>
+  <p>锁定依据：Stacking 池A(RidgeCV+HistGB+LGBM+SVR，折内OOF)=<b>0.9801±0.0006</b>，比调参后HistGB单模型（max_iter=500, lr=0.05 → 0.9777±0.0008）+0.0025（配对p=0.0002），过2×CVstd判据（0.0012&lt;0.0030）；3种子15折复核0.9801±0.0008（最差折0.9788），每种子稳赢HistGB。<b>扩池B被拒：</b>+ExtraTrees+XGB后0.9804，配对p=0.027但Δ=+0.0003&lt;2×CVstd——统计显著的噪声，按纪律拒绝，不为它多付50%训练时间和两层过拟合风险；HistGB absolute_error 0.9768拒（squared loss与R²对齐，理论也对）。<b>透明度纪律：</b>12个评分/综合列OLS R²=0.9397必须正面写进论文——目标与Healthy_Aging_Score共享成分（留一贡献0.0717独大）是T3任务设计使然（综合分预测），不存在精确生成式，Stacking增益来自模型互补而非单列复制；附剔除Healthy_Aging列的稳健性对照数字。同seed同folds对比、Level-1保持简单Ridge、clip无效（已放弃）。无派生A/B档（0.849/0.918）双轨写入论文。</p>
 </section>
 
 <!-- ================= 五、建模报告结构 ================= -->
@@ -320,7 +320,7 @@
     <tr><td><b>① 特征重要性分析</b></td><td>哪些特征对预测贡献最大，明显指向性</td><td>SHAP + 置换重要性 + 线性系数三通道，跨任务Top15，域一致性论证（初赛惯例）</td></tr>
     <tr><td><b>② 强相关、泄漏特征剔除思路</b></td><td>强相关特征如何处理；泄漏特征识别与剔除依据</td><td>泄漏地图F1–F6、VIF共线组、T1特征域三档决策记录、生成机制探针结论</td></tr>
     <tr><td><b>③ 模型选择依据</b></td><td>为什么选这个模型（不选别的）</td><td>14模型×3档矩阵、模型族裁决（线性/树胜负手与数据机制的对印）、配对检验</td></tr>
-    <tr><td><b>④ 调参过程</b></td><td>超参搜索空间、过程、收敛判据</td><td>Optuna TPESampler、50 trials收敛判据、调参记录可复现</td></tr>
+    <tr><td><b>④ 调参过程</b></td><td>超参搜索空间、过程、收敛判据</td><td>alpha网格（T1 最优0.6747≈基线0.6744、T2 ElasticNet 0.6245≈0.6243→均无空间）；T3 HistGB调参（500/0.05/31→0.9777微升）；被拒候选矩阵（样条/核方法/扩池/absolute_error）与收敛判据全程可复现</td></tr>
   </table>
 </section>
 
@@ -331,7 +331,8 @@
     <tr><th style="width:26%">风险</th><th>影响</th><th>预案</th></tr>
     <tr><td><b class="warn">错过8/31 09:00硬截止</b></td><td>致命，一切归零</td><td>8/30晚保底包提交并确认"已提交"；缓冲窗口只替换不新做；平台拥堵走备用邮箱（勿双通道重复）</td></tr>
     <tr><td><b>提交物命名/结构不符官方格式</b></td><td>直接失分或拒收</td><td>提交前10问第⑥问=对照官方命名逐字核对（ADATA2600953.pdf/cns/model.zip）；论文摘要首页≤1页、页眉 Team# DATA2600953 page X of Y、正文≤30页、中文</td></tr>
-    <tr><td><b>T1特征域划分不当</b>（把携带睡眠结构信息的列误当"非睡眠"）</td><td>高估R²，评审质疑</td><td>白/灰/黑三档今晚定稿；灰色列（睡前屏幕/睡眠障碍风险/Early_Waker/评分列）双轨对照+探针，论文明写证据</td></tr>
+    <tr><td><b>T1特征域划分不当</b>（把携带睡眠结构信息的列误当"非睡眠"）</td><td>高估R²，评审质疑</td><td>白/灰/黑三档已定稿；灰色列（睡前屏幕/睡眠障碍风险/Early_Waker/评分列）双轨对照+探针，论文明写证据</td></tr>
+    <tr><td><b>T1 C档灰色泄漏被其他队使用</b>（+9pp来自Health_Score/Healthy_Aging_Score嵌入成分）</td><td>若纯榜单制且规则允许，排名承压</td><td>规则原文条款摘录进决策记录；论文双轨呈现C档结果+主动声明剔除；若平台允许多次提交另备C档变体（团队拍板，默认B档主提交——复审合规性与诚信叙事更值）</td></tr>
     <tr><td><b>测试集触碰纪律破坏</b></td><td>提交成绩虚高，违规</td><td>测试真值仅在8/30下午终评脚本中出现一次；CSV由锁定模型一次性生成</td></tr>
     <tr><td><b>T3全特征R²近1的"没有故事可讲"</b></td><td>论文单薄</td><td>转化为亮点：系统化泄漏检测+公式搜索+双轨对照（初赛已演练同一叙事），把"发现结构"写成贡献</td></tr>
     <tr><td><b>堆叠/MLP过拟合验证折</b></td><td>CV虚高、测试翻车</td><td>Level-1严格折外预测；融合过2×CVstd才采纳；锁定前seed复核</td></tr>
@@ -353,10 +354,10 @@
         <td>① 训练好的模型文件（3任务锁定pkl）；② 源代码（训练/预测全流程，可复现）；③ 文档说明 Introduction.pdf（①设计思路②环境&语言③模型调用方式——初赛版即现成模板）；④ 3个预测CSV（Person_ID/真值/预测值，内容=自封2000行测试集，Person_ID顺序硬断言）</td><td>8/30晚打包</td></tr>
   </table>
   <div class="check"><b>提交前 10 问：</b>① 三任务目标列是否全程未进特征矩阵？② 任务一特征域白名单是否有书面依据（三档记录）？③ 每个预处理步骤是否折内拟合？④ 测试集是否只被触碰到规定次数？⑤ 论文每个数字是否有实验产物对账？⑥ 三个文件命名是否与官方格式逐字一致（ADATA2600953.pdf / ADATA2600953cns.* / ADATA2600953model.zip），论文页眉队号是否正确？⑦ 预测CSV三列（Person_ID/真值/预测值）格式与要求逐字一致？⑧ 调整R²（任务二）与R²（任务一/三）的口径是否区分正确？⑨ 论文正文≤30页、摘要首页单独成页≤1页？⑩ 是否已点击【提交】并确认系统显示"已提交"？</div>
-  <p style="margin-top:14px"><b>执行基线：</b>今晚（8/28）完成 T1 特征域拍板与规则确认后，Day 1 起跑线 = 模型短名单 + 特征域三档 + 泄漏地图 F1–F6 + VIF 共线组。两日目标：<span class="good">三任务 R² 达到摸底结论支撑的精度上限（T1≈0.67+、T2≈0.62、T3≈0.98），论文沿特征工程/模型调优/数据洞察三主线逻辑闭环，8/30 晚保底包落袋。</span></p>
+  <p style="margin-top:14px"><b>执行基线（8/28晚最终锁定）：</b>三任务建模全部封盘——<span class="good">T1=0.6825（B档Ridge+top10交互含平方）、T2=0.6244（Lasso(α=0.01)，B档+Early_Waker）、T3=0.9801（Stacking池A，3种子0.9801±0.0008）</span>，全程两道闸门纪律（逐折配对t + 3种子复核）。Day 1 起跑线 = 锁定配置 + 特征域决策记录 + 泄漏地图 F1–F6 + VIF 共线组；建模时间只留给 B2–B6 块消融。两日目标：论文沿特征工程/模型调优/数据洞察三主线逻辑闭环（差异化卖点：T2 Early_Waker 发现、T1 诚信双轨、两道闸门方法论），8/30 晚保底包落袋。</p>
 </section>
 
-<footer>DATA2600953 · 复赛A题作战规划 v2 · 2026-08-28 · 赛程 8/28 09:00–8/31 09:00 · 环境：PyCharm 2026.1.2 + Python 3.14</footer>
+<footer>DATA2600953 · 复赛A题作战规划 v3（验证锁定版） · 2026-08-28 · 赛程 8/28 09:00–8/31 09:00 · 环境：PyCharm 2026.1.2 + Python 3.14</footer>
 </div>
 </body>
 </html>

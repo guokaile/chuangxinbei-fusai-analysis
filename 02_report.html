@@ -96,6 +96,7 @@
   <div class="box"><div class="v">0.977</div><div class="l">T3 健康评分 · C档最优CV R²<br>（HistGB(直方梯度提升)）</div></div>
   <div class="box"><div class="v">0.158</div><div class="l">T1 纯生活习惯基线（A档）<br>（Lasso(L1)）</div></div>
 </div>
+  <div class="good"><b>验证已完成（8/28晚）：</b>三任务锁定见第七节——T1 <b>0.6825</b>（Ridge+top10交互含平方）、T2 <b>0.6244</b>（Lasso(α=0.01)，B档+Early_Waker，封盘）、T3 <b>0.9801</b>（Stacking池A，已锁定）。上方四块为摸底基准值，保留作对照。</div>
   <p style="font-size:13.5px;color:var(--sub)">说明：A档=严格无派生（纯行为+生理，不含任何评分/综合列）；B档=含单项评分列（睡眠质量/精力/情绪等分项，不含综合结局列）；C档=全特征（含Health_Score相关综合列）。调整R²按特征数p对R²修正。CV为5折分层（Wellness_Category），折内完成编码/填充/标准化。</p>
   <div class="good"><b>数据一致性声明：</b>复赛《A题数据集.csv》与初赛数据（train_df+test_df合并）逐行逐列核对<b>完全一致（0处差异）</b>；本报告封存的8000/2000划分与初赛划分逐行相同。因此初赛全部资产（预处理Pipeline、泄漏地图、特征工程六块31个）原样有效，报告与论文中不使用"数据已更新"表述。测试集由选手自封自选与规则完全契合（"组委会将在参赛选手提交的测试集上评估"），论文中写明划分方式（分层依据、seed=42、零触碰记录）作为划分干净的可辩护证据。</div>
 </section>
@@ -135,7 +136,7 @@
     <tr><td>Weight_kg</td><td><b>VIF=96.9</b></td><td>体重 = BMI × 身高²（定义式），与 BMI/Height_cm 共线组</td></tr>
     <tr><td>Health_Score</td><td><b>VIF=30.7</b></td><td>综合评分由各分项评分聚合，与分项评分列共线</td></tr>
   </table>
-  <p style="font-size:14px">剔除 Sleep_Time / Weight_kg / Health_Score 后，剩余40列最高VIF降至7.5（Healthy_Aging_Score），全部低于10——共线性集中在三个结构性共线组。<b>处置预案：</b>① 时间组保留 Wake_Up_Time + Sleep_Duration_Hours（丢弃Sleep_Time）；② 体格组保留 BMI（丢弃Weight_kg/Height_cm或仅保留其一）；③ 正则化（Lasso/ElasticNet已在摸底中证实有效：B/C档均列第一）。</p>
+  <p style="font-size:14px">剔除 Sleep_Time / Weight_kg / Health_Score 后，剩余40列最高VIF降至7.5（Healthy_Aging_Score），全部低于10——共线性集中在三个结构性共线组。<b>处置预案：</b>① 时间组保留 Wake_Up_Time + Sleep_Duration_Hours（丢弃Sleep_Time）；② 体格组保留 BMI（丢弃Weight_kg/Height_cm或仅保留其一）；③ 正则化（Lasso/ElasticNet已在摸底中证实有效：B/C档均列第一）；④ <b>已实测：</b>VIF剪枝后R²=0.6229不掉精度——剪枝证据写进论文共线性处理段。</p>
 </section>
 
 
@@ -157,7 +158,7 @@
 <table class="mt"><thead><tr><th>排名</th><th>模型</th><th>R² (均值±std)</th><th>调整R²</th><th>RMSE</th><th>模型族</th></tr></thead><tbody><tr class="bestrow"><td>1</td><td>Ridge(岭回归)</td><td><b>0.7659</b> ± 0.0054</td><td>0.7577</td><td>0.769</td><td>线性族</td></tr><tr><td>2</td><td>OLS(线性回归)</td><td><b>0.7659</b> ± 0.0054</td><td>0.7577</td><td>0.769</td><td>线性族</td></tr><tr><td>3</td><td>Huber(稳健回归)</td><td><b>0.7655</b> ± 0.0056</td><td>0.7573</td><td>0.770</td><td>线性族</td></tr><tr><td>4</td><td>ElasticNet</td><td><b>0.7631</b> ± 0.0046</td><td>0.7548</td><td>0.774</td><td>线性族</td></tr><tr><td>5</td><td>Lasso(L1)</td><td><b>0.7615</b> ± 0.0048</td><td>0.7531</td><td>0.777</td><td>线性族</td></tr><tr><td>6</td><td>SVR(RBF)</td><td><b>0.7487</b> ± 0.0064</td><td>0.7399</td><td>0.797</td><td>其他(核/KNN/MLP)</td></tr><tr><td>7</td><td>HistGB(直方梯度提升)</td><td><b>0.7254</b> ± 0.0097</td><td>0.7158</td><td>0.833</td><td>树族</td></tr><tr><td>8</td><td>XGBoost</td><td><b>0.7195</b> ± 0.0072</td><td>0.7097</td><td>0.842</td><td>树族</td></tr><tr><td>9</td><td>LightGBM</td><td><b>0.7167</b> ± 0.0086</td><td>0.7068</td><td>0.846</td><td>树族</td></tr><tr><td>10</td><td>MLP(128,64)</td><td><b>0.7096</b> ± 0.0068</td><td>0.6994</td><td>0.857</td><td>其他(核/KNN/MLP)</td></tr><tr><td>11</td><td>ExtraTrees</td><td><b>0.6238</b> ± 0.0131</td><td>0.6106</td><td>0.975</td><td>树族</td></tr><tr><td>12</td><td>随机森林</td><td><b>0.6067</b> ± 0.0132</td><td>0.5930</td><td>0.997</td><td>树族</td></tr><tr><td>13</td><td>KNN(k=9)</td><td><b>0.4027</b> ± 0.0089</td><td>0.3818</td><td>1.229</td><td>其他(核/KNN/MLP)</td></tr><tr><td>14</td><td>决策树</td><td><b>0.2533</b> ± 0.0414</td><td>0.2272</td><td>1.373</td><td>树族</td></tr></tbody></table>
 </div>
   <div class="verdict"><h3>🔍 模型族裁决</h3><ul><li><b>A档</b>（40特征）：<b>线性族占优</b>（Lasso(L1) 0.1583 领先最强树族 随机森林 0.1479，Δ=+0.0105）；全档最优 Lasso(L1) R²=0.1583，RMSE=1.459</li><li><b>B档</b>（49特征）：<b>线性族占优</b>（Ridge(岭回归) 0.6744 领先最强树族 HistGB(直方梯度提升) 0.6396，Δ=+0.0348）；全档最优 Ridge(岭回归) R²=0.6744，RMSE=0.907</li><li><b>C档</b>（54特征）：<b>线性族占优</b>（Ridge(岭回归) 0.7659 领先最强树族 HistGB(直方梯度提升) 0.7254，Δ=+0.0405）；全档最优 Ridge(岭回归) R²=0.7659，RMSE=0.769</li></ul></div>
-  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>A档（纯行为+生理）最优 Lasso(L1) R²=0.1583，加入非睡眠心理评分后（B档）升至 0.6744（+0.5161），说明精力/情绪状态是睡眠质量的重要代理信号——「睡眠质量主要由生活习惯与心理状态驱动」是任务一的题眼结论；C档（含综合列）达 0.7659，但综合列携带睡眠质量成分，属灰色地带，论文按双轨呈现。</p><p><b>复赛建议：</b>① 主提交用B档（非睡眠特征+分项评分，符合赛题语义），A档作纯生活习惯对照组；② 补「生成机制探针」：Sleep_Quality对评分列做OLS，证明评分列不是确定性成分（全数值R²=0.716已初步排除），评分列整体进灰色名单、双轨对照写入报告；③ 白捡精度：目标落在0.1网格（89个唯一值），预测值clip到[1.0,9.8]再round到0.1网格，CV验证有效才锁定；④ 二阶交互：top-10特征二次交互喂Ridge——树模型全线跑输线性说明信号以线性加性为主，二次项是比调参更可能出增量的方向（初赛LR_quad已验证）。</p></div>
+  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>A档（纯行为+生理）最优 Lasso(L1) R²=0.1583，加入非睡眠心理评分后（B档）升至 0.6744（+0.5161），说明精力/情绪状态是睡眠质量的重要代理信号——「睡眠质量主要由生活习惯与心理状态驱动」是任务一的题眼结论。</p><p><b>验证后锁定（8/28晚）：</b>B档 Ridge 基线 0.6744 → top-10交互(i&lt;j) <b>0.6815</b>（配对t p=0.0074，5/5折全胜）→ 含平方项 <b>0.6825</b>（p=0.0169，5/5折全胜）；3种子15折复核 0.6817±0.0110（最差折0.6628）跨种子稳定。<b>容量证据：</b>KernelRidge(RBF)=0.6162惨败——非线性结构很浅，线性+适度交互即正确容量，不再试核方法；调参无空间（alpha网格0.6747≈基线0.6744）；clip+round到0.1网格实测无效（+0.0001），放弃；线性四模型融合+0.01pp不显著（p=0.11），不做。</p><p><b>安全性两段论（论文写法）：</b>① 生成性检验：9个非睡眠评分列对目标OLS R²仅0.52——排除确定性生成，但0.52≠零相关，不能写成「R²低所以安全」，安全性的真正依据是第②点；② 逐列消融：C档（0.7659）超出B档的部分<b>全部</b>来自Health_Score(+0.090)与Healthy_Aging_Score(+0.057)两个嵌入睡眠成分的综合列，Wellness_Category/Fitness_Level/Early_Waker贡献为零——目标藏在特征里的灰色泄漏，排除判断正确：B档主提交，C档结果双轨写入论文并主动声明剔除。</p></div>
 </section>
 <section>
   <h2>任务二 · 工作效率驱动因素<span class="taskmeta">全特征·处理共线性 → Productivity_Score</span></h2>
@@ -177,7 +178,7 @@
 <table class="mt"><thead><tr><th>排名</th><th>模型</th><th>R² (均值±std)</th><th>调整R²</th><th>RMSE</th><th>模型族</th></tr></thead><tbody><tr class="bestrow"><td>1</td><td>Lasso(L1)</td><td><b>0.6243</b> ± 0.0175</td><td>0.6092</td><td>0.703</td><td>线性族</td></tr><tr><td>2</td><td>ElasticNet</td><td><b>0.6239</b> ± 0.0177</td><td>0.6088</td><td>0.703</td><td>线性族</td></tr><tr><td>3</td><td>Ridge(岭回归)</td><td><b>0.6228</b> ± 0.0181</td><td>0.6075</td><td>0.704</td><td>线性族</td></tr><tr><td>4</td><td>OLS(线性回归)</td><td><b>0.6227</b> ± 0.0182</td><td>0.6075</td><td>0.704</td><td>线性族</td></tr><tr><td>5</td><td>Huber(稳健回归)</td><td><b>0.6222</b> ± 0.0180</td><td>0.6070</td><td>0.705</td><td>线性族</td></tr><tr><td>6</td><td>ExtraTrees</td><td><b>0.5874</b> ± 0.0213</td><td>0.5707</td><td>0.737</td><td>树族</td></tr><tr><td>7</td><td>HistGB(直方梯度提升)</td><td><b>0.5831</b> ± 0.0224</td><td>0.5663</td><td>0.740</td><td>树族</td></tr><tr><td>8</td><td>随机森林</td><td><b>0.5771</b> ± 0.0202</td><td>0.5600</td><td>0.746</td><td>树族</td></tr><tr><td>9</td><td>XGBoost</td><td><b>0.5764</b> ± 0.0237</td><td>0.5593</td><td>0.746</td><td>树族</td></tr><tr><td>10</td><td>LightGBM</td><td><b>0.5754</b> ± 0.0196</td><td>0.5582</td><td>0.747</td><td>树族</td></tr><tr><td>11</td><td>SVR(RBF)</td><td><b>0.5466</b> ± 0.0170</td><td>0.5283</td><td>0.772</td><td>其他(核/KNN/MLP)</td></tr><tr><td>12</td><td>MLP(128,64)</td><td><b>0.4578</b> ± 0.0247</td><td>0.4360</td><td>0.845</td><td>其他(核/KNN/MLP)</td></tr><tr><td>13</td><td>KNN(k=9)</td><td><b>0.4207</b> ± 0.0163</td><td>0.3973</td><td>0.873</td><td>其他(核/KNN/MLP)</td></tr><tr><td>14</td><td>决策树</td><td><b>0.2337</b> ± 0.0209</td><td>0.2028</td><td>1.004</td><td>树族</td></tr></tbody></table>
 </div>
   <div class="verdict"><h3>🔍 模型族裁决</h3><ul><li><b>A档</b>（56特征）：<b>树族占优</b>（ExtraTrees 0.5559 领先最强线性族 ElasticNet 0.5465，Δ=-0.0095）；全档最优 ExtraTrees R²=0.5559，RMSE=0.764</li><li><b>B档</b>（57特征）：<b>线性族占优</b>（Lasso(L1) 0.5848 领先最强树族 LightGBM 0.5794，Δ=+0.0054）；全档最优 Lasso(L1) R²=0.5848，RMSE=0.739</li><li><b>C档</b>（62特征）：<b>线性族占优</b>（Lasso(L1) 0.6243 领先最强树族 ExtraTrees 0.5874，Δ=+0.0369）；全档最优 Lasso(L1) R²=0.6243，RMSE=0.703</li></ul></div>
-  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>任务二不限制特征域，C档 Lasso(L1) R²=0.6243（调整R²0.6092）。目标本身仅约47%方差可被数值特征线性解释（OLS），属三任务中信号最弱者。注意：n=10000、p≈50时调整R²惩罚仅约0.5%，模型选择结论与R²几乎无差别——<b>不必在调整R²上过度着墨</b>，精力放在共线性处理与解释上。</p><p><b>复赛建议：</b>① 共线性落码：时间组保留Wake_Up_Time+Sleep_Duration（弃Sleep_Time，VIF=73k）、体格组保留BMI（弃Weight_kg）、Health_Score含/不含双轨；② 正则化族主导+树族对照；③ <b>解释是这题的得分点</b>：三通道（Ridge系数+SHAP+置换）之外加共线簇级贡献（Energy/Fatigue/Mood簇内相关0.4–0.6，报簇合计比单列系数稳健）；剂量-效应结论（「每日步数+1000→生产力+X」）用PDP支撑；④ 预测同样clip+round到0.1网格。</p></div>
+  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>任务二不限制特征域，C档 Lasso(L1) R²=0.6243。目标本身仅约47%方差可被数值特征线性解释（OLS），属三任务中信号最弱者。</p><p><b>验证后锁定（8/28晚）：</b>主提交 Lasso（B档+Early_Waker）=<b>0.6244</b>，与C档持平——逐列消融证明C-B全部增益来自Early_Waker一列（+0.040），Health_Score等四综合列Lasso零权重。Early_Waker对T2完全合法（无特征域限制），且「早起者生产力显著更高」正是赛题「哪些因素对提升精力贡献最大」最有故事性的答案——<b>进摘要</b>。3种子复核0.6247±0.0152稳定。<b>封盘声明：</b>五个增强候选（交互/平方/样条/评分列二阶）全部落在±0.0001噪声级，无一显著——0.6244已触及信号上限，剩余分数在报告里不在模型里。</p><p><b>口径与措辞纪律：</b>① 调整R²惩罚在n=10000、p=62时仅约0.002（含工程特征p≈400时约0.015）——模型选择结论不变，论文统一口径并注明p；② VIF剪枝不掉精度（0.6229）作为共线性处理证据成文；③ Early_Waker提交前做「马甲检查」（确认非目标成分派生）；④ 相关性表述，不写因果。</p></div>
 </section>
 <section>
   <h2>任务三 · 综合健康评分终极预测<span class="taskmeta">全特征·堆叠/深度 → Health_Score</span></h2>
@@ -197,21 +198,53 @@
 <table class="mt"><thead><tr><th>排名</th><th>模型</th><th>R² (均值±std)</th><th>调整R²</th><th>RMSE</th><th>模型族</th></tr></thead><tbody><tr class="bestrow"><td>1</td><td>HistGB(直方梯度提升)</td><td><b>0.9771</b> ± 0.0010</td><td>0.9762</td><td>1.855</td><td>树族</td></tr><tr><td>2</td><td>LightGBM</td><td><b>0.9768</b> ± 0.0009</td><td>0.9759</td><td>1.867</td><td>树族</td></tr><tr><td>3</td><td>XGBoost</td><td><b>0.9766</b> ± 0.0009</td><td>0.9757</td><td>1.875</td><td>树族</td></tr><tr><td>4</td><td>ExtraTrees</td><td><b>0.9743</b> ± 0.0009</td><td>0.9732</td><td>1.967</td><td>树族</td></tr><tr><td>5</td><td>随机森林</td><td><b>0.9718</b> ± 0.0011</td><td>0.9707</td><td>2.059</td><td>树族</td></tr><tr><td>6</td><td>SVR(RBF)</td><td><b>0.9699</b> ± 0.0003</td><td>0.9687</td><td>2.130</td><td>其他(核/KNN/MLP)</td></tr><tr><td>7</td><td>Lasso(L1)</td><td><b>0.9695</b> ± 0.0006</td><td>0.9683</td><td>2.142</td><td>线性族</td></tr><tr><td>8</td><td>Ridge(岭回归)</td><td><b>0.9695</b> ± 0.0006</td><td>0.9682</td><td>2.143</td><td>线性族</td></tr><tr><td>9</td><td>OLS(线性回归)</td><td><b>0.9695</b> ± 0.0006</td><td>0.9682</td><td>2.144</td><td>线性族</td></tr><tr><td>10</td><td>ElasticNet</td><td><b>0.9694</b> ± 0.0005</td><td>0.9682</td><td>2.145</td><td>线性族</td></tr><tr><td>11</td><td>Huber(稳健回归)</td><td><b>0.9694</b> ± 0.0006</td><td>0.9682</td><td>2.145</td><td>线性族</td></tr><tr><td>12</td><td>MLP(128,64)</td><td><b>0.9523</b> ± 0.0018</td><td>0.9504</td><td>2.679</td><td>其他(核/KNN/MLP)</td></tr><tr><td>13</td><td>决策树</td><td><b>0.9485</b> ± 0.0014</td><td>0.9464</td><td>2.784</td><td>树族</td></tr><tr><td>14</td><td>KNN(k=9)</td><td><b>0.7955</b> ± 0.0052</td><td>0.7872</td><td>5.548</td><td>其他(核/KNN/MLP)</td></tr></tbody></table>
 </div>
   <div class="verdict"><h3>🔍 模型族裁决</h3><ul><li><b>A档</b>（48特征）：<b>树族占优</b>（HistGB(直方梯度提升) 0.8487 领先最强线性族 Lasso(L1) 0.8395，Δ=-0.0092）；全档最优 HistGB(直方梯度提升) R²=0.8487，RMSE=4.770</li><li><b>B档</b>（58特征）：线性族与树族旗鼓相当（Lasso(L1) 0.9136 vs HistGB(直方梯度提升) 0.9109）；全档最优 SVR(RBF) R²=0.9177，RMSE=3.519</li><li><b>C档</b>（62特征）：<b>树族占优</b>（HistGB(直方梯度提升) 0.9771 领先最强线性族 Lasso(L1) 0.9695，Δ=-0.0076）；全档最优 HistGB(直方梯度提升) R²=0.9771，RMSE=1.855</li></ul></div>
-  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>C档（全特征）最优 HistGB(直方梯度提升) R²=0.9771，前5名差距0.001–0.005=噪声量级——锁定前必须做不同seed复核/配对检验（2×CVstd纪律）。Health_Score可被全数值特征线性解释96.7%（in-sample OLS），Wellness_Category/Fitness_Level为其确定性分箱映射（100%一致）。</p><p><b>复赛建议：</b>① 先花1-2小时做「精确公式搜索」：Lasso/子集回归在评分列上搜索Health_Score的精确生成式——若找到R²→1.0组合直接使用并如实声明（T3明确允许所有有效特征），胜过任何堆叠；找不到再堆叠；② 堆叠两处加强：SVR必进Level-0（B档第一0.9177，超过所有线性与树模型）；Level-1除Ridge外试非负最小二乘（权重可解释性更好）；③ clip到[27.3,100]+round 0.1后处理；④ 保留无派生A/B档量化行为特征的真实预测能力，论文如实声明结构性可推导性。</p></div>
+  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>C档（全特征）摸底最优 HistGB(直方梯度提升) R²=0.9771（调参后0.9777）。</p><p><b>验证后锁定（8/28晚终检）：</b>12个评分/综合列OLS R²=0.9397（Healthy_Aging_Score留一贡献0.0717独大）——<b>不存在精确生成式</b>，堆叠是正确路线；Stacking 池A(RidgeCV+HistGB+LGBM+SVR，折内OOF)=<b>0.9801±0.0006</b>，比调参后HistGB（0.9777±0.0008）+0.0025（配对p=0.0002），过2×CVstd判据（0.0012&lt;0.0030）；3种子15折复核0.9801±0.0008（最差折0.9788），每种子稳赢HistGB。<b>扩池B被拒：</b>+ExtraTrees+XGB后0.9804，配对p=0.027但Δ=+0.0003&lt;2×CVstd闸门——统计显著的噪声，按纪律拒绝；HistGB absolute_error 0.9768拒（squared loss与R²对齐）；clip无效已放弃。</p><p><b>透明度纪律（论文写法）：</b>0.9397必须正面呈现——目标与Healthy_Aging_Score共享成分是T3任务设计使然（综合分预测），Stacking增益来自模型互补而非单列复制，附剔除Healthy_Aging列的稳健性对照数字；堆叠与单模型须同seed同folds对比（配对性），Level-1保持简单Ridge、不在level-2调参；无派生A/B档（0.849/0.918）双轨写入论文。</p></div>
 </section>
 
 <section>
-  <h2>六、下一步行动（修正时间表）</h2>
+  <h2>六、下一步行动（8/28晚验证后更新）</h2>
   <ul>
-    <li><b>今晚（8/28）：</b>T1 特征域白/灰/黑三档拍板（灰色名单含评分列）→ 15分钟通读提交流程规则确认</li>
-    <li><b>Day 1（8/29）：</b>T1/T2 按短名单建模 → 生成机制探针 → 块消融+二阶交互 → Optuna 调参 → 论文第2-3章</li>
-    <li><b>Day 2（8/30）：</b>上午 T3 公式搜索→堆叠 → 下午测试集终评（唯一一次触碰）+预测CSV生成 → 晚上论文定稿+<b>首次提交保底包</b>（确认"已提交"）</li>
+    <li><b>今晚（8/28）已全部完成：</b>特征域定稿（T1=B档锁定）→ 规则确认 → 三任务验证实验（逐列消融/配对检验/seed复核）</li>
+    <li><b>Day 1（8/29）：</b>T1 锁定配置落码+B2–B6块消融（限时4小时）；T2 封盘、写共线性证据与驱动因素报告；论文第2-3章</li>
+    <li><b>Day 2（8/30）：</b>上午 论文第4-5章（模型选择依据/调参过程，被拒实验矩阵为素材） → 下午测试集终评（唯一一次触碰）+预测CSV生成 → 晚上论文定稿+<b>首次提交保底包</b>（确认"已提交"）</li>
     <li><b>8/31 09:00前：</b>仅应急缓冲——保底包在手，有明确改进才替换重传（以最后一次为准），不做任何新实验</li>
   </ul>
-  <p style="font-size:13px;color:var(--sub)">详见《01_复赛作战规划.html》(v2)；全部实验记录留存 analysis/ 目录。</p>
+  <p style="font-size:13px;color:var(--sub)">详见《01_复赛作战规划.html》(v3)；全部实验记录留存 analysis/ 目录。</p>
 </section>
 
-<footer>DATA2600953 · 复赛A题摸底检测报告 · 生成于2026-08-28 · Python 3.14 · 赛程 8/28 09:00–8/31 09:00</footer>
+<section>
+  <h2>七、验证实验与最终锁定（8/28晚）</h2>
+  <table>
+    <tr><th>任务</th><th>特征域</th><th>锁定模型</th><th>摸底 R²</th><th>锁定 R²</th><th>采纳依据</th></tr>
+    <tr><td><b>T1</b> 睡眠质量</td><td>B档（非睡眠+分项评分）</td><td>Ridge + top10交互（含平方）</td><td>0.6744</td><td><b>0.6825</b></td>
+        <td>两步均5/5折全胜+配对t（p=0.0074 / 0.0169）；3种子复核0.6817±0.0110；KernelRidge 0.6162证实容量已对；唯一剩余空间：B2–B6工程块消融（配对t判据）</td></tr>
+    <tr><td><b>T2</b> 生产力</td><td>B档+Early_Waker（=C档等价）</td><td>Lasso(α=0.01)</td><td>0.6243</td><td><b>0.6244</b></td>
+        <td>C-B增益逐列消融全部来自Early_Waker(+0.040)；五候选增强±0.0001噪声级→封盘；3种子0.6247±0.0152</td></tr>
+    <tr><td><b>T3</b> 健康评分</td><td>C档全特征</td><td>Stacking池A(RidgeCV+HistGB+LGBM+SVR，折内OOF)</td><td>0.9771</td><td><b>0.9801</b></td>
+        <td>12列OLS 0.9397无精确生成式→堆叠正确；+0.0025过2×CVstd判据；3种子0.9801±0.0008每种子稳赢HistGB；扩池B 0.9804被拒（Δ=0.0003&lt;闸门0.0012）</td></tr>
+  </table>
+  <h3>关键裁决（含评审整改）</h3>
+  <ul>
+    <li><b>T1 排除C档的判断正确：</b>逐列消融证明+9pp全部来自Health_Score(+0.090)/Healthy_Aging_Score(+0.057)——目标藏在特征里；论文按「生成性检验（OLS R²=0.52≠1）+ 逐列消融」两段论写，不写「R²低所以安全」</li>
+    <li><b>已放弃的技巧（实测无效）：</b>clip+round到0.1网格（+0.0001）；T1线性四模型融合（+0.01pp，p=0.11）；T2线性+树融合（降到0.619）；T1/T2调参（无空间）</li>
+    <li><b>T2 封盘：</b>0.6244已触及信号上限，剩余分数在报告（Early_Waker驱动因素进摘要+共线性处理证据+剂量-效应PDP）</li>
+    <li><b>T3 透明度：</b>0.9397正面呈现+剔除Healthy_Aging稳健性对照；堆叠同seed同folds对比；Level-1简单Ridge</li>
+    <li><b>调整R²口径：</b>n=10000、p=62时惩罚约0.002（p≈400含工程特征约0.015），论文统一口径并注明p</li>
+    <li><b>两道闸门纪律（方法论章节核心）：</b>全程逐折配对t检验+3种子复核，过不了闸一律不锁——扩池B（p=0.027但Δ=0.0003）是「拒绝统计显著噪声」的实例，候选表原样放进论文</li>
+    <li><b>封盘声明：</b>T1 in-sample OLS 0.71 vs CV 0.6825、KernelRidge -6.5pp、扩池+0.0003三证据闭环——三任务已到信号/工程上限，剩余唯一空间=B2–B6块消融（Day 1限时4h）</li>
+    <li><b>战略决策待拍板：</b>T1 规则原文条款摘录后定 B档主提交 vs C档变体（默认B档主提交）</li>
+  </ul>
+  <h3>T3 高R²过拟合检验（8/28晚，不动测试集，脚本 t3_overfit_check.py）</h3>
+  <ul>
+    <li><b>结构归因（全部OOF）：</b>全62特征纯线性 Ridge OOF R²=<b>0.9693±0.0007</b>；仅Healthy_Aging_Score单列 OOF=0.8826（Wellness_Category/Fitness_Level在其上零增量——分箱信息被连续列完全覆盖）；剔除该列后其余61列 OOF=0.9132——0.98的主体是特征内合法结构，Stacking仅在线性之上+1.1pp</li>
+    <li><b>过拟合指纹：</b>HistGB in-sample 0.9965 vs OOF 0.9779（回代差1.9pp，树模型正常水平）；Stacking meta层回代差=<b>0.0000</b>（Level-1简单Ridge无记忆空间）；注入10列随机噪声 Δ=-0.0002（不吸收噪声）；折间std=0.0007、最差折0.9791</li>
+    <li><b>学习曲线：</b>25%→0.9685 / 50%→0.9759 / 75%→0.9770 / 100%→0.9777——单调上升后平台化，信号到顶而非过拟合</li>
+    <li><b>独立复现：</b>本队按同协议独立重跑：HistGB 0.9779、Stacking 0.9800，与验证方 0.9777/0.9801 吻合——数字可复现，无单脚本偏差</li>
+    <li><b>结论与预案：</b>0.98不是过拟合；剩余真风险=泄漏性质（F2/F4，按透明度纪律正面呈现）+终评落差（8/30才可见）——若测试R²低于CV超过0.5pp，回退HistGB 0.9777，极端情况回退纯线性Ridge 0.9693（零过拟合地板）</li>
+  </ul>
+</section>
+
+<footer>DATA2600953 · 复赛A题摸底检测报告（含验证锁定节） · 生成于2026-08-28 · Python 3.14 · 赛程 8/28 09:00–8/31 09:00</footer>
 </div>
 <script>
 document.querySelectorAll('.tabbtn').forEach(function(btn){
