@@ -53,6 +53,24 @@
   ul{padding-left:22px; margin:6px 0;} li{margin-bottom:4px;}
   b{color:var(--ink);}
   footer{text-align:center; color:var(--muted); font-size:12.5px; margin-top:6px;}
+  /* ---------- 移动端适配 ---------- */
+  @media (max-width:768px){
+    .wrap{padding:14px 12px 60px;}
+    header.hero{padding:22px 16px; border-radius:12px; margin-bottom:18px;}
+    .hero h1{font-size:20px;}
+    .hero .meta{gap:10px; font-size:12px;}
+    section{padding:16px 12px; margin-bottom:16px; border-radius:10px;}
+    h2{font-size:17px; padding-left:10px;}
+    h2 .taskmeta{display:block; margin-left:0; margin-top:4px;}
+    table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+    .kpi .box{min-width:44%; padding:12px 10px;}
+    .kpi .box .v{font-size:20px;}
+    .tabrow{flex-wrap:wrap;}
+    .tabbtn{padding:6px 12px; font-size:13px;}
+    .chartbox{padding:8px 10px;}
+    .chartbox svg{max-width:100%; height:auto; display:block;}
+    .note,.good,.verdict,.reco{padding:9px 12px; font-size:13px;}
+  }
 </style>
 </head>
 <body>
