@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复赛A题 · 作战规划（修正版v2） — DATA2600953</title>
+<style>
+  :root{
+    --ink:#1a2332; --sub:#5a6b82; --line:#dfe6f0; --bg:#f4f7fb;
+    --brand:#1f4e9c; --brand-2:#2e6fd8; --accent:#c8841d; --good:#1e7d4f; --warn:#b3382c;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif; background:var(--bg);
+       color:var(--ink); line-height:1.75; font-size:15px;}
+  .wrap{max-width:1080px; margin:0 auto; padding:32px 24px 80px;}
+  header.hero{background:linear-gradient(135deg,#173a73 0%, #1f4e9c 55%, #2e6fd8 100%);
+       color:#fff; border-radius:14px; padding:40px 44px; margin-bottom:28px; position:relative; overflow:hidden;}
+  header.hero::after{content:"FINAL ROUND"; position:absolute; right:-18px; bottom:-30px;
+       font-size:86px; font-weight:800; opacity:.08; letter-spacing:6px;}
+  .hero h1{font-size:30px; letter-spacing:1px; margin-bottom:10px;}
+  .hero .sub{font-size:15px; opacity:.92; margin-bottom:18px;}
+  .hero .meta{display:flex; gap:26px; flex-wrap:wrap; font-size:13.5px; opacity:.95;}
+  .hero .meta b{font-weight:700; margin-right:4px;}
+  .tagline{display:inline-block; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+       padding:4px 14px; border-radius:999px; font-size:13px; margin-bottom:16px;}
+  section{background:var(--card); border:1px solid var(--line); border-radius:12px;
+       padding:28px 32px; margin-bottom:24px; box-shadow:0 1px 3px rgba(20,40,80,.05);}
+  h2{font-size:21px; color:var(--brand); border-left:5px solid var(--brand);
+     padding-left:12px; margin-bottom:18px; letter-spacing:.5px;}
+  h3{font-size:16.5px; color:var(--ink); margin:20px 0 10px;}
+  h3 .no{display:inline-block; background:var(--brand); color:#fff; border-radius:6px;
+     padding:1px 9px; font-size:13px; margin-right:8px; vertical-align:2px;}
+  h4{font-size:15px; color:var(--brand-2); margin:14px 0 6px;}
+  p{margin-bottom:10px;}
+  ul,ol{padding-left:24px; margin-bottom:12px;}
+  li{margin-bottom:5px;}
+  b{color:var(--ink);}
+  .hl{background:#fff4d6; padding:1px 6px; border-radius:4px; font-weight:700;}
+  .warn{color:var(--warn); font-weight:700;}
+  .good{color:var(--good); font-weight:700;}
+  table{width:100%; border-collapse:collapse; margin:14px 0 18px; font-size:13.5px;}
+  th{background:#eef3fa; color:var(--brand); font-weight:700; text-align:left;
+     padding:9px 12px; border:1px solid var(--line); white-space:nowrap;}
+  td{padding:9px 12px; border:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fafcfe;}
+  .daycard{border:1px solid var(--line); border-radius:12px; margin-bottom:22px; overflow:hidden;}
+  .dayhead{display:flex; justify-content:space-between; align-items:center;
+       background:linear-gradient(90deg,#1f4e9c,#2e6fd8); color:#fff; padding:12px 22px;}
+  .dayhead .dn{font-size:17px; font-weight:800; letter-spacing:1px;}
+  .dayhead .dd{font-size:13px; opacity:.9;}
+  .dayhead.d2{background:linear-gradient(90deg,#14543f,#1e7d4f);}
+  .dayhead.d3{background:linear-gradient(90deg,#7a4a0d,#c8841d);}
+  .dayhead.d0{background:linear-gradient(90deg,#5a3a8c,#8a5ac9);}
+  .daybody{padding:18px 22px;}
+  .slot{display:flex; gap:14px; padding:10px 0; border-bottom:1px dashed var(--line);}
+  .slot:last-child{border-bottom:none;}
+  .slot .t{flex:0 0 96px; font-weight:700; color:var(--brand); font-size:13.5px; padding-top:2px;}
+  .slot .c{flex:1; font-size:14px;}
+  .slot .c ul{margin:4px 0 0;}
+  .out{display:inline-block; background:#e8f1e8; color:var(--good); border:1px solid #c4e0c4;
+       border-radius:5px; padding:0 8px; font-size:12px; margin:2px 4px 2px 0; font-weight:600;}
+  .kpi{display:flex; gap:14px; flex-wrap:wrap; margin:16px 0 4px;}
+  .kpi .box{flex:1; min-width:150px; background:#f6f9fd; border:1px solid var(--line);
+       border-radius:10px; padding:14px 16px; text-align:center;}
+  .kpi .box .v{font-size:20px; font-weight:800; color:var(--brand);}
+  .kpi .box .l{font-size:12.5px; color:var(--sub); margin-top:2px;}
+  .note{background:#fff8e8; border-left:4px solid var(--accent); padding:10px 16px;
+       border-radius:0 8px 8px 0; font-size:13.5px; margin:12px 0;}
+  .risk{background:#fdf1f0; border-left:4px solid var(--warn); padding:10px 16px;
+       border-radius:0 8px 8px 0; font-size:13.5px; margin:12px 0;}
+  .check{background:#eef9f1; border-left:4px solid var(--good); padding:10px 16px;
+       border-radius:0 8px 8px 0; font-size:13.5px; margin:12px 0;}
+  .stepflow{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 16px;}
+  .stepflow .s{background:#eef3fa; border:1px solid #d5e0f0; color:var(--brand);
+       border-radius:8px; padding:7px 12px; font-size:13px; font-weight:600;}
+  .stepflow .arrow{color:#9db2cc; font-weight:800; align-self:center;}
+  footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:8px;}
+  @media print{ body{background:#fff;} section{break-inside:avoid; box-shadow:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="tagline">2026 第五届“创新杯”大学生大数据挑战赛 · 复赛A题 · 规划修正版 v2</span>
+  <h1>复赛A题 · 作战规划</h1>
+  <div class="sub">健康生活方式与早起习惯数据分析（回归三任务）&nbsp;—&nbsp;队伍 DATA2600953</div>
+  <div class="meta">
+    <span><b>赛程：</b>8月28日 09:00 – 8月31日 09:00</span>
+    <span><b class="warn" style="color:#ffd9d9">提交通道：8/31 早 9 点关闭（硬截止）</b></span>
+    <span><b>策略：</b>8/30 晚提交保底包，8/31 09:00 前仅应急替换</span>
+    <span><b>环境：</b>PyCharm 2026.1.2 + Python 3.14</span>
+    <span><b>初赛战绩：</b>95.20 / 100（已晋级）</span>
+  </div>
+</header>
+
+<!-- ================= 一、赛题解读 ================= -->
+<section>
+  <h2>一、赛题解读（按题目原文校验）</h2>
+  <table>
+    <tr><th>维度</th><th>复赛题目原文要求</th><th>我们的应对</th></tr>
+    <tr><td><b>任务类型</b></td><td>三任务回归（题目背景"分类任务"系初赛沿袭表述，以任务条款为准）</td><td>三个连续数值目标的精准预测</td></tr>
+    <tr><td><b>任务一</b></td>
+        <td>预测 <span class="hl">Sleep_Quality_Score</span>——<b>仅使用非睡眠类特征</b>（不能直接用 Sleep Duration 等直接描述睡眠的字段），报告决定系数 R²₁</td>
+        <td>特征域白名单今晚拍板（见§三阶段0）；提交口径按 R²</td></tr>
+    <tr><td><b>任务二</b></td>
+        <td>预测 <span class="hl">Productivity_Score</span>——需<b>处理特征间多重共线性</b>，解释哪些因素对提升精力贡献最大，报告调整决定系数 adjust-R²₂</td>
+        <td>VIF诊断已完成（条件数1038，3个结构性共线组）；报告口径按调整R²，解释做三通道+簇级贡献+PDP</td></tr>
+    <tr><td><b>任务三</b></td>
+        <td>预测 <span class="hl">Health_Score</span>——使用<b>全部有效特征</b>，鼓励深度学习或堆叠（Stacking），报告决定系数 R²₃</td>
+        <td>精确公式搜索→堆叠（SVR进Level-0，NNLS做Level-1），双轨对照</td></tr>
+    <tr><td><b>评估与排名</b></td><td>组委会在<b>参赛选手提交的测试集</b>上评估各任务的回归（调整）决定系数；赛题<b>未给出任务权重</b></td>
+        <td>按等权重准备，论文中不编造权重；测试集由我方自封（8000/2000分层划分，seed=42），规则完全契合</td></tr>
+    <tr><td><b>数据</b></td><td>10000×64，与初赛数据<b>完全一致</b>（逐行逐列核对 0 处差异）</td>
+        <td>初赛全部资产（预处理Pipeline、泄漏地图、特征工程）<b>原样有效</b>；论文不出现"数据已更新"表述</td></tr>
+    <tr><td><b>提交物</b></td><td>三大部分分别上传：论文PDF + 承诺书 + 支撑材料zip（含模型文件/源代码/文档说明/3个预测CSV）</td><td>命名严格按官方：ADATA2600953.pdf / ADATA2600953cns.* / ADATA2600953model.zip</td></tr>
+    <tr><td><b>每任务要求</b></td><td>模型代码 + 预测CSV（Person ID/真值/预测值）+ 建模报告（<b>特征重要性分析、明显指向性、强相关、泄漏特征剔除思路、模型选择依据及调参过程</b>）</td><td>建模报告固定四段结构（§五），CSV内容为自封2000行测试集</td></tr>
+    <tr><td><b>纪律红线</b></td><td>自行划分训练/验证集，<b class="warn">禁止使用测试集真值进行任何训练或超参选择</b></td><td>测试真值仅在8/30下午终评脚本中出现一次；封存记录可查</td></tr>
+  </table>
+  <div class="note"><b>题目背景中的评审关注点：</b>原文明示竞赛旨在锻炼<b>特征工程、模型调优及数据洞察</b>三项能力——论文结构需围绕这三条主线组织（特征工程章=块消融+泄漏审查；模型调优章=矩阵+Optuna收敛判据；数据洞察章=泄漏地图+生成机制诊断+SHAP解释），让评审逐条对得上。</div>
+</section>
+
+<!-- ================= 二、方法论 ================= -->
+<section>
+  <h2>二、核心方法论：初赛资产的直接复用 + 复赛三项新武器</h2>
+  <p>复赛数据与初赛完全一致，初赛95.20分的五条方法论<b>全部原样有效</b>；同时复赛为回归赛制，新增三项针对连续目标的武器：</p>
+  <table>
+    <tr><th style="width:20%">方法</th><th>来源</th><th>复赛用法</th></tr>
+    <tr><td><b>① 系统性泄漏检测</b></td><td>初赛（已验证）</td>
+        <td>泄漏地图 F1–F6 已重建并确认与初赛一致（Early_Waker=起床<6:30 一致率100%；Wellness_Category=Health_Score的[45,65,80]分箱100%；Fitness_Level≡Wellness_Category）；回归目标均非确定性派生（Health_Score全数值OLS R²=0.967、睡眠7特征→睡眠质量R²=0.082、全数值→生产力R²=0.475）</td></tr>
+    <tr><td><b>② 双轨建模</b></td><td>初赛（已验证）</td>
+        <td>全特征赛道（合规提交精度上限）+ 无派生赛道（科学分析）双轨呈现；摸底已按 A/B/C 三档特征域完成</td></tr>
+    <tr><td><b>③ 折内 Pipeline</b></td><td>初赛（已验证）</td>
+        <td>原样保留：填充/编码/Winsorize/标准化折内fit；B6分组统计折内学习</td></tr>
+    <tr><td><b>④ 统计判据与噪声锚定</b></td><td>初赛（已验证）</td>
+        <td>块保留 2×CVstd、调参收敛 1×CVstd、融合 +0.5pp、CV→Test≤3pp 纪律全部沿用R²尺度</td></tr>
+    <tr><td><b>⑤ 线性结构诊断</b></td><td>初赛（已验证）</td>
+        <td>摸底证实：T1线性族碾压树族（B档Ridge 0.674 vs 树0.640）；T2线性微优；T3树族在A/C档反超（HistGB 0.977）——分任务选模型，不搞一刀切</td></tr>
+    <tr><td><b>⑥ 0.1网格后处理</b></td><td>复赛新武器</td>
+        <td>三个目标全部落在0.1网格上（唯一值89/71/617）。预测值 clip 到值域 + round 到0.1网格，CV内验证有效才锁定——白捡的精度</td></tr>
+    <tr><td><b>⑦ 生成机制探针</b></td><td>复赛新武器</td>
+        <td>T1：Sleep_Quality对评分列OLS（判定评分列是否为"确定性成分"）；T3：Lasso/子集回归精确公式搜索（若找到R²→1.0的生成式，直接使用并如实声明，胜过任何堆叠）</td></tr>
+    <tr><td><b>⑧ 二阶交互扩展</b></td><td>初赛LR_quad复赛加强版</td>
+        <td>top-10特征的二次交互喂给Ridge——树模型全线跑输线性说明信号以线性加性为主，二次项比调参更可能出增量</td></tr>
+  </table>
+</section>
+
+<!-- ================= 三、作战时间表 ================= -->
+<section>
+  <h2>三、作战时间表（修正版：8/30 完成首次提交）</h2>
+  <div class="kpi">
+    <div class="box"><div class="v">今晚 · 8/28</div><div class="l">阶段0：规则确认+特征域拍板</div></div>
+    <div class="box"><div class="v">Day 1 · 8/29</div><div class="l">T1+T2 建模 + 论文骨架</div></div>
+    <div class="box"><div class="v">Day 2 · 8/30</div><div class="l">T3建模+测试终评+<b>首次提交保底包</b></div></div>
+    <div class="box"><div class="v">8/31 09:00前</div><div class="l">应急缓冲（可重复提交，以最后一次为准）</div></div>
+  </div>
+  <div class="risk"><b>铁律：</b>8/30 晚 24:00 前必须完成首次提交并确认系统显示"已提交"。之后任何改进以替换包形式在 8/31 09:00 前重新上传（官方允许重复提交、以最后一次为准）——这是防崩盘的关键策略：<span class="hl">保底包先落袋，优化包做替换</span>。</div>
+  <p>执行纪律（全程红线）：<b>①</b> 测试集真值全程只允许触碰一次（8/30 下午终评脚本）；<b>②</b> 任何预处理/特征/超参只依据训练折学习；<b>③</b> 每个实验有编号、有记录（初赛167条实验日志惯例）；<b>④</b> 论文图表数据必须能从实验产物一键复现；<b>⑤</b> 论文与报告口径严格区分 R² 与调整R²，不混用。</p>
+</section>
+
+<!-- ===== 阶段0 ===== -->
+<section>
+  <div class="daycard">
+    <div class="dayhead d0"><span class="dn">阶段 0 · 今晚拍板日</span><span class="dd">2026-08-28（今天）</span></div>
+    <div class="daybody">
+      <div class="slot"><div class="t">已完成的</div><div class="c">
+        <ul><li>复赛数据集深度EDA + 泄漏地图 F1–F6 重建（与初赛结论一致）</li>
+        <li>多模型摸底测试：3任务 × 3特征档 × 14模型 × 5折CV，最优方案已出（检测报告）</li>
+        <li>任务二 VIF 共线性诊断：条件数1038，Sleep_Time VIF=73,275 / Weight_kg 96.9 / Health_Score 30.7 三个结构性共线组</li>
+        <li>8000/2000 分层划分封存（split/，测试集零触碰）</li></ul>
+      </div></div>
+      <div class="slot"><div class="t">今晚必做</div><div class="c">
+        <ul><li><b>T1 特征域白名单定稿</b>（不缺数据只缺拍板，不要占用Day 1上午）：
+            <span class="hl">白名单</span>=剔除8类睡眠域列（Wake/Sleep时间、睡眠时长、夜间醒来、周末差异、午睡、睡前屏幕、睡眠障碍风险）；
+            <span class="hl">灰色名单</span>=Early_Waker（起床派生）+ 全部评分列（Fatigue/Mood/Energy/Productivity等——Fatigue与睡眠的语义距离比Early_Waker更近）+ 综合列（Health_Score/Wellness_Category/Fitness_Level/Healthy_Aging_Score）；
+            灰名单处置=双轨对照+生成机制探针（评分列对目标OLS），结论写入论文"泄漏特征剔除思路"段</li>
+        <li><b>15分钟规则确认</b>：通读《论文格式规范及提交流程》全文（要点：截止8/31 09:00、摘要首页≤1页、页眉 Team# DATA2600953 page X of Y、正文≤30页、中文、三部分分别上传、命名格式、可重复提交、备用邮箱）</li>
+        <li>按本规划锁定 Day 1 起跑的模型短名单：T1={Ridge,Lasso,ElasticNet,HistGB}+二次项扩展；T2={Lasso,Ridge,ElasticNet,ExtraTrees,HistGB}；T3={HistGB,XGB,LGBM,SVR,线性族}+公式搜索</li></ul>
+        <span class="out">产出：T1特征域决策记录（白/灰/黑三档+依据）</span><span class="out">产出：规则确认清单</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Day 1 ===== -->
+<section>
+  <div class="daycard">
+    <div class="dayhead"><span class="dn">Day 1 · 双任务建模日</span><span class="dd">2026-08-29 — T1 睡眠质量 + T2 生产力</span></div>
+    <div class="daybody">
+      <div class="slot"><div class="t">上午</div><div class="c">
+        <b>T1 睡眠质量量化评估</b>
+        <ul><li>按昨晚白名单跑基线复核（B档口径：非睡眠特征+分项评分）</li>
+        <li><b>生成机制探针</b>：Sleep_Quality_Score 对9个评分列 OLS——判定评分列是否构成确定性成分，结论进"泄露剔除思路"段</li>
+        <li>工程特征块复用初赛六块31个（剔除睡眠域块），逐块消融（2×CVstd判据）</li></ul>
+      </div></div>
+      <div class="slot"><div class="t">下午</div><div class="c">
+        <b>T1 二阶交互 + T2 共线性建模</b>
+        <ul><li>T1 二次交互扩展：top-10特征两两交互项喂给Ridge（初赛LR_quad已验证的路线，回归版放大收益）</li>
+        <li>T1 0.1网格后处理：clip到[1.0,9.8]+round 0.1，CV内验证净增益后锁定</li>
+        <li>T2 共线性处置落码：时间组保留Wake_Up_Time+Sleep_Duration（弃Sleep_Time）；体格组保留BMI；综合列双轨（含/不含Health_Score）</li>
+        <li>T2 模型矩阵：Lasso/Ridge/ElasticNet/ExtraTrees/HistGB 5折CV（调整R²口径）</li></ul>
+      </div></div>
+      <div class="slot"><div class="t">晚上</div><div class="c">
+        <ul><li>T1/T2 短名单 Optuna 调参（TPESampler，50 trials，收敛判据=末20trials提升&lt;1×CVstd）</li>
+        <li>论文骨架：摘要框架、第2章数据描述与EDA（泄漏地图直接入章，突出<b>数据洞察</b>）、T1/T2建模章节初稿</li></ul>
+        <span class="out">产出：T1/T2调参记录+锁定配置</span><span class="out">产出：论文第2-3章初稿</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Day 2 ===== -->
+<section>
+  <div class="daycard">
+    <div class="dayhead d2"><span class="dn">Day 2 · 终极任务日 + 首次提交日</span><span class="dd">2026-08-30 — T3 建模 → 终评 → 保底包提交</span></div>
+    <div class="daybody">
+      <div class="slot"><div class="t">上午</div><div class="c">
+        <b>T3 综合健康评分终极预测</b>
+        <ul><li><b>精确公式搜索（1-2小时，先于堆叠）</b>：Lasso/子集回归在评分列上搜索 Health_Score 的精确生成式——若找到 R²→1.0 组合，直接使用并如实声明（T3明确允许所有有效特征），胜过任何堆叠；找不到再进入堆叠</li>
+        <li>堆叠方案：Level-0={Ridge, ElasticNet, HistGB, XGB, LGBM, <b>SVR</b>（B档第一0.9177，必进）, MLP}，Level-1={Ridge, <b>非负最小二乘NNLS</b>（权重可解释性更好）}，折外预测生成Level-1输入</li>
+        <li>clip到[27.3,100]+round 0.1 后处理验证</li></ul>
+      </div></div>
+      <div class="slot"><div class="t">下午</div><div class="c">
+        <b>测试集终评（本日唯一一次触碰测试真值）+ 预测CSV生成</b>
+        <ul><li>三任务锁定模型在8000训练集全量重训 → 2000测试集预测 → R²/调整R² 终评</li>
+        <li>CV→Test 一致性检查：偏差≤3pp纪律线，异常只记录不回调</li>
+        <li>预测CSV 三件套生成：<b>Person_ID / 真值 / 预测值</b>三列，Person_ID顺序硬断言，内容=自封2000行测试集</li>
+        <li>锁定差距&lt;0.005的模型做不同seed复核/配对检验后再锁定（符合2×CVstd纪律）</li></ul>
+      </div></div>
+      <div class="slot"><div class="t">晚上</div><div class="c">
+        <b>论文定稿 + 提交包封装 + 首次提交（保底包）</b>
+        <ul><li>论文定稿：摘要（首页≤1页）→目录→正文（≤30页，页码从1起，页眉 Team# DATA2600953 page X of Y）→附录（环境+全部源代码清单，页数不限）</li>
+        <li>支撑材料组装：ADATA2600953model.zip = 模型文件 + 源代码 + Introduction.pdf（①设计思路②环境&语言③模型调用方式）+ 3个预测CSV；承诺书签字扫描</li>
+        <li><b>24:00前完成首次提交</b>：逐字核对命名（ADATA2600953.pdf / ADATA2600953cns.pdf / ADATA2600953model.zip）→ 平台上传 → 点击【提交】→ 确认显示"已提交"</li></ul>
+        <span class="out">产出：终版论文</span><span class="out">产出：提交保底包（已提交状态）</span><span class="out">产出：终评记录</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8/31 ===== -->
+<section>
+  <div class="daycard">
+    <div class="dayhead d3"><span class="dn">8/31 09:00 前 · 应急缓冲窗口</span><span class="dd">2026-08-31 — 仅优化替换，不做任何新实验</span></div>
+    <div class="daybody">
+      <div class="slot"><div class="t">缓冲规则</div><div class="c">
+        <ul><li>保底包已在手（8/30晚"已提交"状态确认过）——此窗口<b>只做替换、不做新实验</b>，杜绝临门一脚翻车</li>
+        <li>若8/30夜/8/31晨发现明确改进（如后处理或简单融合的净增益），打包替换版重新上传（官方：可重复提交，以最后一次为准）</li>
+        <li>替换前同样过"提交前10问"；若平台高峰拥堵无法上传，走备用邮箱通道（13214014116@163.com，附件命名 ADATA2600953.zip，<b>勿与平台提交重复</b>）</li>
+        <li>最后一小时只检查不修改：文件命名、队号一致性、系统"已提交"状态</li></ul>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 四、任务技术路线 ================= -->
+<section>
+  <h2>四、各任务技术路线（分步骤）</h2>
+  <h3><span class="no">T1</span>睡眠质量量化评估（非睡眠特征 → Sleep_Quality_Score，R²）</h3>
+  <div class="stepflow">
+    <span class="s">1. 特征域三档定稿（今晚）</span><span class="arrow">→</span>
+    <span class="s">2. 生成机制探针（评分列OLS）</span><span class="arrow">→</span>
+    <span class="s">3. 块消融+二阶交互</span><span class="arrow">→</span>
+    <span class="s">4. 模型矩阵+Optuna</span><span class="arrow">→</span>
+    <span class="s">5. 0.1网格后处理（CV验证）</span><span class="arrow">→</span>
+    <span class="s">6. SHAP+报告</span>
+  </div>
+  <p>摸底依据：B档 Ridge CV R²=0.6744（树族最优HistGB 0.6396，线性领先+0.035）；心理评分列贡献+0.52 R²（纯生活习惯A档仅0.158）——"睡眠质量主要由生活习惯与心理状态驱动"是任务一的题眼结论，论文"数据洞察"章重点写。预期增量：调参+二次交互+后处理。</p>
+
+  <h3><span class="no">T2</span>工作效率与活力的驱动因素建模（→ Productivity_Score，调整R²）</h3>
+  <div class="stepflow">
+    <span class="s">1. 共线性处置（3个共线组落码）</span><span class="arrow">→</span>
+    <span class="s">2. 正则化族矩阵（调整R²口径）</span><span class="arrow">→</span>
+    <span class="s">3. 树族对照</span><span class="arrow">→</span>
+    <span class="s">4. 调参+seed复核</span><span class="arrow">→</span>
+    <span class="s">5. 解释三通道+簇级贡献+PDP</span>
+  </div>
+  <p>摸底依据：C档 Lasso CV R²=0.6243（调整R² 0.6092）；调整R²与R²在n=10000、p≈50时仅差约0.5%，<b>不必过度着墨</b>——精力放在共线性处理与解释上。<b>解释是这题的得分点：</b>①Ridge系数+SHAP+置换重要性三通道；②共线簇级贡献（Energy/Fatigue/Mood簇内相关0.4–0.6，单列系数不稳定，报簇合计更稳健）；③剂量-效应结论（"每日步数+1000 → 生产力+X"）用PDP支撑。Health_Score含/不含双轨，论文写清取舍。</p>
+
+  <h3><span class="no">T3</span>综合健康评分的终极预测（全特征 → Health_Score，R²）</h3>
+  <div class="stepflow">
+    <span class="s">1. 精确公式搜索（1-2h，先于堆叠）</span><span class="arrow">→</span>
+    <span class="s">2. 未果→堆叠（SVR/NNLS加强）</span><span class="arrow">→</span>
+    <span class="s">3. 无派生消融（科学赛道）</span><span class="arrow">→</span>
+    <span class="s">4. clip[27.3,100]后处理</span><span class="arrow">→</span>
+    <span class="s">5. seed复核+锁定</span>
+  </div>
+  <p>摸底依据：C档 HistGB CV R²=0.9771（前5名差距0.001–0.005=噪声量级，锁定前必须seed复核/配对检验）；in-sample OLS 96.7% 说明残差中可能仍含确定性成分——公式搜索若命中R²→1.0生成式则直接使用（T3明确允许所有有效特征，如实声明即可），命中不了再堆叠。无派生A/B档（0.849/0.918）是行为特征真实预测能力的科学结论，双轨对照写入论文。</p>
+</section>
+
+<!-- ================= 五、建模报告结构 ================= -->
+<section>
+  <h2>五、建模报告固定四段结构（题目原文逐字要求）</h2>
+  <p>每个任务的建模报告（落在论文对应章节+支撑材料 Introduction.pdf）固定四段：</p>
+  <table>
+    <tr><th style="width:22%">段落</th><th>内容要点（题目原文要求）</th><th>本队素材</th></tr>
+    <tr><td><b>① 特征重要性分析</b></td><td>哪些特征对预测贡献最大，明显指向性</td><td>SHAP + 置换重要性 + 线性系数三通道，跨任务Top15，域一致性论证（初赛惯例）</td></tr>
+    <tr><td><b>② 强相关、泄漏特征剔除思路</b></td><td>强相关特征如何处理；泄漏特征识别与剔除依据</td><td>泄漏地图F1–F6、VIF共线组、T1特征域三档决策记录、生成机制探针结论</td></tr>
+    <tr><td><b>③ 模型选择依据</b></td><td>为什么选这个模型（不选别的）</td><td>14模型×3档矩阵、模型族裁决（线性/树胜负手与数据机制的对印）、配对检验</td></tr>
+    <tr><td><b>④ 调参过程</b></td><td>超参搜索空间、过程、收敛判据</td><td>Optuna TPESampler、50 trials收敛判据、调参记录可复现</td></tr>
+  </table>
+</section>
+
+<!-- ================= 六、风险 ================= -->
+<section>
+  <h2>六、风险清单与预案</h2>
+  <table>
+    <tr><th style="width:26%">风险</th><th>影响</th><th>预案</th></tr>
+    <tr><td><b class="warn">错过8/31 09:00硬截止</b></td><td>致命，一切归零</td><td>8/30晚保底包提交并确认"已提交"；缓冲窗口只替换不新做；平台拥堵走备用邮箱（勿双通道重复）</td></tr>
+    <tr><td><b>提交物命名/结构不符官方格式</b></td><td>直接失分或拒收</td><td>提交前10问第⑥问=对照官方命名逐字核对（ADATA2600953.pdf/cns/model.zip）；论文摘要首页≤1页、页眉 Team# DATA2600953 page X of Y、正文≤30页、中文</td></tr>
+    <tr><td><b>T1特征域划分不当</b>（把携带睡眠结构信息的列误当"非睡眠"）</td><td>高估R²，评审质疑</td><td>白/灰/黑三档今晚定稿；灰色列（睡前屏幕/睡眠障碍风险/Early_Waker/评分列）双轨对照+探针，论文明写证据</td></tr>
+    <tr><td><b>测试集触碰纪律破坏</b></td><td>提交成绩虚高，违规</td><td>测试真值仅在8/30下午终评脚本中出现一次；CSV由锁定模型一次性生成</td></tr>
+    <tr><td><b>T3全特征R²近1的"没有故事可讲"</b></td><td>论文单薄</td><td>转化为亮点：系统化泄漏检测+公式搜索+双轨对照（初赛已演练同一叙事），把"发现结构"写成贡献</td></tr>
+    <tr><td><b>堆叠/MLP过拟合验证折</b></td><td>CV虚高、测试翻车</td><td>Level-1严格折外预测；融合过2×CVstd才采纳；锁定前seed复核</td></tr>
+    <tr><td><b>论文与实验数字不一致</b></td><td>逻辑核查失分</td><td>数字一致性对账脚本（初赛Day-4惯例），图表由结果JSON再生；R²/调整R²口径区分</td></tr>
+    <tr><td><b>时间溢出</b></td><td>挤压提交</td><td>每实验预设时间盒（调参≤1.5h/任务）；超时回退上一锁定配置；保底包策略吸收全部剩余风险</td></tr>
+  </table>
+</section>
+
+<!-- ================= 七、提交清单 ================= -->
+<section>
+  <h2>七、提交物清单与最终检查表（官方三部分结构）</h2>
+  <table>
+    <tr><th>官方要求</th><th>命名</th><th>内容要点</th><th>负责时间</th></tr>
+    <tr><td><b>参赛论文（PDF）</b></td><td>ADATA2600953.pdf</td>
+        <td>摘要首页≤1页（题目+摘要+关键词）→目录→正文（页码从1起、页脚中部、页眉 Team# DATA2600953 page X of Y、≤30页、中文）→附录（环境+全部源代码，不限页）；<b>不含承诺书</b></td><td>8/30晚定稿</td></tr>
+    <tr><td><b>承诺书</b></td><td>ADATA2600953cns.pdf / jpg / png</td>
+        <td>电子签名或打印手写签名后拍照/扫描</td><td>8/30晚随包</td></tr>
+    <tr><td><b>支撑材料（模型预测结果）</b></td><td>ADATA2600953model.zip</td>
+        <td>① 训练好的模型文件（3任务锁定pkl）；② 源代码（训练/预测全流程，可复现）；③ 文档说明 Introduction.pdf（①设计思路②环境&语言③模型调用方式——初赛版即现成模板）；④ 3个预测CSV（Person_ID/真值/预测值，内容=自封2000行测试集，Person_ID顺序硬断言）</td><td>8/30晚打包</td></tr>
+  </table>
+  <div class="check"><b>提交前 10 问：</b>① 三任务目标列是否全程未进特征矩阵？② 任务一特征域白名单是否有书面依据（三档记录）？③ 每个预处理步骤是否折内拟合？④ 测试集是否只被触碰到规定次数？⑤ 论文每个数字是否有实验产物对账？⑥ 三个文件命名是否与官方格式逐字一致（ADATA2600953.pdf / ADATA2600953cns.* / ADATA2600953model.zip），论文页眉队号是否正确？⑦ 预测CSV三列（Person_ID/真值/预测值）格式与要求逐字一致？⑧ 调整R²（任务二）与R²（任务一/三）的口径是否区分正确？⑨ 论文正文≤30页、摘要首页单独成页≤1页？⑩ 是否已点击【提交】并确认系统显示"已提交"？</div>
+  <p style="margin-top:14px"><b>执行基线：</b>今晚（8/28）完成 T1 特征域拍板与规则确认后，Day 1 起跑线 = 模型短名单 + 特征域三档 + 泄漏地图 F1–F6 + VIF 共线组。两日目标：<span class="good">三任务 R² 达到摸底结论支撑的精度上限（T1≈0.67+、T2≈0.62、T3≈0.98），论文沿特征工程/模型调优/数据洞察三主线逻辑闭环，8/30 晚保底包落袋。</span></p>
+</section>
+
+<footer>DATA2600953 · 复赛A题作战规划 v2 · 2026-08-28 · 赛程 8/28 09:00–8/31 09:00 · 环境：PyCharm 2026.1.2 + Python 3.14</footer>
+</div>
+</body>
+</html>
