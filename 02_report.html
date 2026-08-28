@@ -91,12 +91,12 @@
   <h2>一、检测概览</h2>
   
 <div class="kpi">
-  <div class="box"><div class="v">0.674</div><div class="l">T1 睡眠质量 · B档最优CV R²<br>（Ridge(岭回归)）</div></div>
-  <div class="box"><div class="v">0.585</div><div class="l">T2 生产力 · B档最优CV R²<br>（Lasso(L1)）</div></div>
-  <div class="box"><div class="v">0.977</div><div class="l">T3 健康评分 · C档最优CV R²<br>（HistGB(直方梯度提升)）</div></div>
-  <div class="box"><div class="v">0.158</div><div class="l">T1 纯生活习惯基线（A档）<br>（Lasso(L1)）</div></div>
+  <div class="box"><div class="v">0.6825</div><div class="l">T1 睡眠质量 · <b>最终锁定</b> CV R²<br>（Ridge + top10交互含平方）</div></div>
+  <div class="box"><div class="v">0.6244</div><div class="l">T2 生产力 · <b>最终锁定</b> CV R²<br>（Lasso(α=0.01)，B档+Early_Waker）</div></div>
+  <div class="box"><div class="v">0.9801</div><div class="l">T3 健康评分 · <b>最终锁定</b> CV R²<br>（Stacking池A）</div></div>
+  <div class="box"><div class="v">0.158</div><div class="l">T1 纯生活习惯基线（A档）<br>（科学对照）</div></div>
 </div>
-  <div class="good"><b>验证已完成（8/28晚）：</b>三任务锁定见第七节——T1 <b>0.6825</b>（Ridge+top10交互含平方）、T2 <b>0.6244</b>（Lasso(α=0.01)，B档+Early_Waker，封盘）、T3 <b>0.9801</b>（Stacking池A，已锁定）。上方四块为摸底基准值，保留作对照。</div>
+  <div class="good"><b>验证已完成（8/28晚）：</b>上方KPI为<b>最终锁定值</b>（详见第七节）；锁定前摸底基准（T1 B档 0.6744 / T2 B档 0.585 / T3 C档 0.9771）保留在各任务A/B/C档明细表中作对照。</div>
   <p style="font-size:13.5px;color:var(--sub)">说明：A档=严格无派生（纯行为+生理，不含任何评分/综合列）；B档=含单项评分列（睡眠质量/精力/情绪等分项，不含综合结局列）；C档=全特征（含Health_Score相关综合列）。调整R²按特征数p对R²修正。CV为5折分层（Wellness_Category），折内完成编码/填充/标准化。</p>
   <div class="good"><b>数据一致性声明：</b>复赛《A题数据集.csv》与初赛数据（train_df+test_df合并）逐行逐列核对<b>完全一致（0处差异）</b>；本报告封存的8000/2000划分与初赛划分逐行相同。因此初赛全部资产（预处理Pipeline、泄漏地图、特征工程六块31个）原样有效，报告与论文中不使用"数据已更新"表述。测试集由选手自封自选与规则完全契合（"组委会将在参赛选手提交的测试集上评估"），论文中写明划分方式（分层依据、seed=42、零触碰记录）作为划分干净的可辩护证据。</div>
 </section>
@@ -121,7 +121,7 @@
         <td>仅7个睡眠特征 OLS R²=<b>0.0817</b>（睡眠时长/入睡时间等几乎不解释睡眠质量！）；全数值特征 R²=0.716</td>
         <td><b>任务一题眼验证</b>：睡眠质量主要由生活习惯与心理状态驱动，"用非睡眠特征预测睡眠质量"是有真实信号的任务</td></tr>
     <tr><td><b>F6</b> Productivity_Score 信号最弱</td>
-        <td>全数值特征 OLS R²=<b>0.4753</b>；与 Energy r=0.60、Fatigue r=0.54</td>
+        <td>全数值特征 OLS R²=<b>0.4753</b>；与 Energy r=0.60、Fatigue r=-0.54</td>
         <td>任务二是三任务中最难者，重点在共线性处理与驱动因素解释</td></tr>
   </table>
   <div class="good"><b>结论：</b>复赛数据保留了初赛的三处结构性规则（F1-F3），同时三个回归目标均<b>不是</b>任何特征的简单确定性函数（F4-F6）——回归赛制的核心争夺点是"逼近生成机制的干净拟合"而非"发现泄漏红利"。</div>
@@ -158,7 +158,7 @@
 <table class="mt"><thead><tr><th>排名</th><th>模型</th><th>R² (均值±std)</th><th>调整R²</th><th>RMSE</th><th>模型族</th></tr></thead><tbody><tr class="bestrow"><td>1</td><td>Ridge(岭回归)</td><td><b>0.7659</b> ± 0.0054</td><td>0.7577</td><td>0.769</td><td>线性族</td></tr><tr><td>2</td><td>OLS(线性回归)</td><td><b>0.7659</b> ± 0.0054</td><td>0.7577</td><td>0.769</td><td>线性族</td></tr><tr><td>3</td><td>Huber(稳健回归)</td><td><b>0.7655</b> ± 0.0056</td><td>0.7573</td><td>0.770</td><td>线性族</td></tr><tr><td>4</td><td>ElasticNet</td><td><b>0.7631</b> ± 0.0046</td><td>0.7548</td><td>0.774</td><td>线性族</td></tr><tr><td>5</td><td>Lasso(L1)</td><td><b>0.7615</b> ± 0.0048</td><td>0.7531</td><td>0.777</td><td>线性族</td></tr><tr><td>6</td><td>SVR(RBF)</td><td><b>0.7487</b> ± 0.0064</td><td>0.7399</td><td>0.797</td><td>其他(核/KNN/MLP)</td></tr><tr><td>7</td><td>HistGB(直方梯度提升)</td><td><b>0.7254</b> ± 0.0097</td><td>0.7158</td><td>0.833</td><td>树族</td></tr><tr><td>8</td><td>XGBoost</td><td><b>0.7195</b> ± 0.0072</td><td>0.7097</td><td>0.842</td><td>树族</td></tr><tr><td>9</td><td>LightGBM</td><td><b>0.7167</b> ± 0.0086</td><td>0.7068</td><td>0.846</td><td>树族</td></tr><tr><td>10</td><td>MLP(128,64)</td><td><b>0.7096</b> ± 0.0068</td><td>0.6994</td><td>0.857</td><td>其他(核/KNN/MLP)</td></tr><tr><td>11</td><td>ExtraTrees</td><td><b>0.6238</b> ± 0.0131</td><td>0.6106</td><td>0.975</td><td>树族</td></tr><tr><td>12</td><td>随机森林</td><td><b>0.6067</b> ± 0.0132</td><td>0.5930</td><td>0.997</td><td>树族</td></tr><tr><td>13</td><td>KNN(k=9)</td><td><b>0.4027</b> ± 0.0089</td><td>0.3818</td><td>1.229</td><td>其他(核/KNN/MLP)</td></tr><tr><td>14</td><td>决策树</td><td><b>0.2533</b> ± 0.0414</td><td>0.2272</td><td>1.373</td><td>树族</td></tr></tbody></table>
 </div>
   <div class="verdict"><h3>🔍 模型族裁决</h3><ul><li><b>A档</b>（40特征）：<b>线性族占优</b>（Lasso(L1) 0.1583 领先最强树族 随机森林 0.1479，Δ=+0.0105）；全档最优 Lasso(L1) R²=0.1583，RMSE=1.459</li><li><b>B档</b>（49特征）：<b>线性族占优</b>（Ridge(岭回归) 0.6744 领先最强树族 HistGB(直方梯度提升) 0.6396，Δ=+0.0348）；全档最优 Ridge(岭回归) R²=0.6744，RMSE=0.907</li><li><b>C档</b>（54特征）：<b>线性族占优</b>（Ridge(岭回归) 0.7659 领先最强树族 HistGB(直方梯度提升) 0.7254，Δ=+0.0405）；全档最优 Ridge(岭回归) R²=0.7659，RMSE=0.769</li></ul></div>
-  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>A档（纯行为+生理）最优 Lasso(L1) R²=0.1583，加入非睡眠心理评分后（B档）升至 0.6744（+0.5161），说明精力/情绪状态是睡眠质量的重要代理信号——「睡眠质量主要由生活习惯与心理状态驱动」是任务一的题眼结论。</p><p><b>验证后锁定（8/28晚）：</b>B档 Ridge 基线 0.6744 → top-10交互(i&lt;j) <b>0.6815</b>（配对t p=0.0074，5/5折全胜）→ 含平方项 <b>0.6825</b>（p=0.0169，5/5折全胜）；3种子15折复核 0.6817±0.0110（最差折0.6628）跨种子稳定。<b>容量证据：</b>KernelRidge(RBF)=0.6162惨败——非线性结构很浅，线性+适度交互即正确容量，不再试核方法；调参无空间（alpha网格0.6747≈基线0.6744）；clip+round到0.1网格实测无效（+0.0001），放弃；线性四模型融合+0.01pp不显著（p=0.11），不做。</p><p><b>安全性两段论（论文写法）：</b>① 生成性检验：9个非睡眠评分列对目标OLS R²仅0.52——排除确定性生成，但0.52≠零相关，不能写成「R²低所以安全」，安全性的真正依据是第②点；② 逐列消融：C档（0.7659）超出B档的部分<b>全部</b>来自Health_Score(+0.090)与Healthy_Aging_Score(+0.057)两个嵌入睡眠成分的综合列，Wellness_Category/Fitness_Level/Early_Waker贡献为零——目标藏在特征里的灰色泄漏，排除判断正确：B档主提交，C档结果双轨写入论文并主动声明剔除。</p></div>
+  <div class="reco"><h3>🎯 最优方案评估与复赛建议</h3><p><b>最优方案评估：</b>A档（纯行为+生理）最优 Lasso(L1) R²=0.1583，加入非睡眠心理评分后（B档）升至 0.6744（+0.5161），说明精力/情绪状态是睡眠质量的重要代理信号——「睡眠质量主要由生活习惯与心理状态驱动」是任务一的题眼结论。</p><p><b>验证后锁定（8/28晚）：</b>B档 Ridge 基线 0.6744 → top-10交互(i&lt;j) <b>0.6815</b>（配对t p=0.0074，5/5折全胜）→ 含平方项 <b>0.6825</b>（p=0.0169，5/5折全胜）；3种子15折复核 0.6817±0.0110（最差折0.6628）跨种子稳定。<b>容量证据：</b>KernelRidge(RBF)=0.6162惨败——非线性结构很浅，线性+适度交互即正确容量，不再试核方法；调参无空间（alpha网格0.6747≈基线0.6744）；clip+round到0.1网格实测无效（+0.0001），放弃；线性四模型融合+0.01pp不显著（p=0.11），不做。</p><p><b>安全性两段论（论文写法）：</b>① 生成性检验：9个非睡眠评分列对目标OLS R²仅0.52——排除确定性生成，但0.52≠零相关，不能写成「R²低所以安全」，安全性的真正依据是第②点；② 逐列消融：C档（0.7659）超出B档的部分<b>全部</b>来自Health_Score(+0.090)与Healthy_Aging_Score(+0.057)两个嵌入睡眠成分的综合列，Wellness_Category/Fitness_Level/Early_Waker贡献≈0（最大仅+0.0013）——目标藏在特征里的灰色泄漏，排除判断正确：B档主提交，C档结果双轨写入论文并主动声明剔除。</p></div>
 </section>
 <section>
   <h2>任务二 · 工作效率驱动因素<span class="taskmeta">全特征·处理共线性 → Productivity_Score</span></h2>
