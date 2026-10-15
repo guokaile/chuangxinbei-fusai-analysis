@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>党的知识问答整理</title>
+<style>
+  :root{
+    --red:#c1272d;
+    --red-dark:#8f1d22;
+    --ink:#22262b;
+    --ink-soft:#4b5259;
+    --line:#e6e3dc;
+    --bg:#f5f3ee;
+    --card:#ffffff;
+    --gold:#b8860b;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC","Noto Sans CJK SC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.75;
+    font-size:16px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 64px;}
+
+  header.masthead{
+    background:linear-gradient(135deg,#c1272d 0%,#8f1d22 100%);
+    color:#fff;
+    padding:44px 20px 38px;
+    text-align:center;
+    box-shadow:0 6px 24px rgba(143,29,34,.25);
+    position:relative;
+    overflow:hidden;
+  }
+  header.masthead::after{
+    content:"★";
+    position:absolute;
+    right:-10px;bottom:-34px;
+    font-size:180px;
+    color:rgba(255,255,255,.07);
+    line-height:1;
+  }
+  header.masthead h1{
+    margin:0 0 10px;
+    font-size:30px;
+    letter-spacing:4px;
+    font-weight:700;
+  }
+  header.masthead p{
+    margin:0;
+    font-size:14px;
+    letter-spacing:2px;
+    opacity:.9;
+  }
+  .badge{
+    display:inline-block;
+    margin-top:14px;
+    padding:4px 16px;
+    font-size:13px;
+    letter-spacing:2px;
+    border:1px solid rgba(255,255,255,.6);
+    border-radius:20px;
+  }
+
+  .notice{
+    background:#fff9ec;
+    border-left:5px solid var(--gold);
+    border-radius:8px;
+    padding:16px 20px;
+    margin:28px 0 8px;
+    font-size:14px;
+    color:#6b5a2a;
+    line-height:1.7;
+  }
+  .notice strong{color:var(--red-dark);}
+
+  .toc{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:20px 24px 18px;
+    margin:22px 0 30px;
+  }
+  .toc h2{
+    margin:0 0 12px;
+    font-size:16px;
+    color:var(--red-dark);
+    letter-spacing:2px;
+    border-bottom:1px dashed var(--line);
+    padding-bottom:10px;
+  }
+  .toc ol{
+    margin:0;padding-left:22px;
+    columns:2;column-gap:34px;
+    font-size:14px;color:var(--ink-soft);
+  }
+  .toc li{margin:3px 0;break-inside:avoid;}
+  .toc a{color:inherit;text-decoration:none;}
+  .toc a:hover{color:var(--red);}
+
+  .qa{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px 20px;
+    margin:0 0 18px;
+    box-shadow:0 2px 10px rgba(0,0,0,.03);
+  }
+  .q{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    font-size:17px;
+    font-weight:700;
+    color:var(--ink);
+    border-bottom:1px dashed var(--line);
+    padding-bottom:12px;
+    margin-bottom:14px;
+  }
+  .q .num{
+    flex:0 0 auto;
+    min-width:30px;height:30px;
+    border-radius:50%;
+    background:var(--red);
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    margin-top:2px;
+  }
+  .a{color:var(--ink-soft);font-size:15.5px;}
+  .a p{margin:0 0 8px;}
+  .a ul,.a ol{margin:6px 0 10px;padding-left:22px;}
+  .a li{margin:5px 0;}
+  .a li b{color:var(--ink);}
+  .label{
+    display:inline-block;
+    font-weight:700;
+    color:var(--red-dark);
+  }
+  .a strong{color:var(--ink);}
+  .a em{font-style:normal;color:var(--red);font-weight:600;}
+  .remark{
+    margin-top:12px;
+    background:#f7f9fb;
+    border-left:4px solid #9db4c0;
+    border-radius:6px;
+    padding:10px 14px;
+    font-size:13.5px;
+    color:#5a6b76;
+  }
+  .remark b{color:#37505c;}
+
+  footer.foot{
+    text-align:center;
+    color:#98a0a6;
+    font-size:12.5px;
+    margin-top:34px;
+    line-height:2;
+  }
+  @media (max-width:640px){
+    .toc ol{columns:1;}
+    header.masthead h1{font-size:23px;letter-spacing:2px;}
+    .q{font-size:16px;}
+    body{font-size:15px;}
+  }
+  @media print{
+    body{background:#fff;}
+    .qa,.toc{box-shadow:none;}
+    header.masthead{box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <h1>党的知识问答整理</h1>
+  <p>党章 · 党的二十大 · 党建基础知识</p>
+  <span class="badge">问 答 汇 编</span>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    <strong>编写说明：</strong>本文件源文档中仅包含题目（共 26 题），未附答案。以下答案依据《中国共产党章程》、党的二十大报告、《中共中央关于党的百年奋斗重大成就和历史经验的决议》等公开文件整理，供学习参考。个别题目的原始表述存在缺字或歧义（已在对应条目中以<strong>「备注」</strong>标注），已按最接近的原意作答。
+  </div>
+
+  <nav class="toc">
+    <h2>目 录</h2>
+    <ol>
+      <li><a href="#q1">党员八项权利与八项义务</a></li>
+      <li><a href="#q2">两个确立、六个坚持、六大纪律</a></li>
+      <li><a href="#q3">党员义务由什么规定</a></li>
+      <li><a href="#q4">党员行使权利的目的</a></li>
+      <li><a href="#q5">学习党史：增强、坚定、做到</a></li>
+      <li><a href="#q6">“两个确立”的内容与地位</a></li>
+      <li><a href="#q7">世界观和方法论的“六个坚持”</a></li>
+      <li><a href="#q8">“三会一课”突出什么</a></li>
+      <li><a href="#q9">毛泽东思想活的灵魂</a></li>
+      <li><a href="#q10">长征胜利周年</a></li>
+      <li><a href="#q11">长征精神体现的理想和什么</a></li>
+      <li><a href="#q12">二十届五中全会</a></li>
+      <li><a href="#q13">最根本的纪律</a></li>
+      <li><a href="#q14">马克思主义中国化第一次飞跃</a></li>
+      <li><a href="#q15">党员权利与义务的关系</a></li>
+      <li><a href="#q16">二十届四中全会：科技自立自强</a></li>
+      <li><a href="#q17">党的组织生活基本形式</a></li>
+      <li><a href="#q18">党的纪律相关表述判断</a></li>
+      <li><a href="#q19">中国共产党入党誓词</a></li>
+      <li><a href="#q20">“三会一课”的内容与要求</a></li>
+      <li><a href="#q21">六大纪律的内涵</a></li>
+      <li><a href="#q22">习近平新时代中国特色社会主义思想概述</a></li>
+      <li><a href="#q23">百年奋斗的四大伟大成就</a></li>
+      <li><a href="#q24">建党周年</a></li>
+      <li><a href="#q25">伟大建党精神</a></li>
+      <li><a href="#q26">大学生入党积极分子如何发挥模范带头作用</a></li>
+    </ol>
+  </nav>
+
+  <!-- Q1 -->
+  <section class="qa" id="q1">
+    <div class="q"><span class="num">1</span><span>党员的权利和党员的义务——八项权利、八项义务分别是什么？</span></div>
+    <div class="a">
+      <p><span class="label">【八项义务（党章第三条）】</span></p>
+      <ol>
+        <li>认真学习马克思列宁主义、毛泽东思想、邓小平理论、“三个代表”重要思想、科学发展观、习近平新时代中国特色社会主义思想，学习党的路线、方针、政策和决议，学习党的基本知识和党的历史，学习科学、文化、法律和业务知识，努力提高为人民服务的本领。</li>
+        <li>增强“四个意识”、坚定“四个自信”、做到“两个维护”，贯彻执行党的基本路线和各项方针政策，带头参加改革开放和社会主义现代化建设，在生产、工作、学习和社会生活中起先锋模范作用。</li>
+        <li>坚持党和人民的利益高于一切，个人利益服从党和人民的利益，吃苦在前、享受在后，克己奉公，多做贡献。</li>
+        <li>自觉遵守党的纪律，首先是党的政治纪律和政治规矩，模范遵守国家的法律法规，严格保守党和国家的秘密，执行党的决定，服从组织分配，积极完成党的任务。</li>
+        <li>维护党的团结和统一，对党忠诚老实、言行一致，坚决反对一切派别组织和小集团活动，反对阳奉阴违的两面派行为和一切阴谋诡计。</li>
+        <li>切实开展批评和自我批评，勇于揭露和纠正违反党的原则的言行和工作中的缺点、错误，坚决同消极腐败现象作斗争。</li>
+        <li>密切联系群众，向群众宣传党的主张，遇事同群众商量，及时向党反映群众的意见和要求，维护群众的正当利益。</li>
+        <li>发扬社会主义新风尚，带头实践社会主义核心价值观和社会主义荣辱观，提倡共产主义道德，弘扬中华民族传统美德，为了保护国家和人民的利益，在一切困难和危险的时刻挺身而出，英勇斗争，不怕牺牲。</li>
+      </ol>
+      <p><span class="label">【八项权利（党章第四条）】</span></p>
+      <ol>
+        <li>参加党的有关会议，阅读党的有关文件，接受党的教育和培训。</li>
+        <li>在党的会议上和党报党刊上，参加关于党的政策问题的讨论。</li>
+        <li>对党的工作提出建议和倡议。</li>
+        <li>在党的会议上有根据地批评党的任何组织和任何党员，向党负责地揭发、检举党的任何组织和任何党员违法乱纪的事实，要求处分违法乱纪的党员，要求罢免或撤换不称职的干部。</li>
+        <li>行使表决权、选举权，有被选举权。</li>
+        <li>在党组织讨论决定对党员的党纪处分或作出鉴定时，本人有权参加和进行申辩，其他党员可以为他作证和辩护。</li>
+        <li>对党的决议和政策如有不同意见，在坚决执行的前提下，可以声明保留，并且可以把自己的意见向党的上级组织直至中央提出。</li>
+        <li>向党的上级组织直至中央提出请求、申诉和控告，并要求有关组织给以负责的答复。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section class="qa" id="q2">
+    <div class="q"><span class="num">2</span><span>“两个确立”“六个坚持”“党的六大纪律”分别是什么？</span></div>
+    <div class="a">
+      <p><span class="label">两个确立：</span>①确立习近平同志党中央的核心、全党的核心地位；②确立习近平新时代中国特色社会主义思想的指导地位。</p>
+      <p><span class="label">六个坚持（“六个必须坚持”）：</span>必须坚持人民至上、必须坚持自信自立、必须坚持守正创新、必须坚持问题导向、必须坚持系统观念、必须坚持胸怀天下。</p>
+      <p><span class="label">党的六大纪律：</span>政治纪律、组织纪律、廉洁纪律、群众纪律、工作纪律、生活纪律。</p>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section class="qa" id="q3">
+    <div class="q"><span class="num">3</span><span>党员义务是党员对党应尽的责任，它由什么规定？</span></div>
+    <div class="a">
+      <p>党员的八项义务由<strong>《中国共产党章程》</strong>（第三条）明确规定。党章是党的根本大法，是全党必须共同遵守的根本行为规范。</p>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section class="qa" id="q4">
+    <div class="q"><span class="num">4</span><span>党员行使权利必须是为了什么的利益？</span></div>
+    <div class="a">
+      <p>党员行使权利必须是为了<em>党和人民的利益</em>（党的事业），而不得为个人私利或损害党的利益。党章在规定党员义务的同时规定党员权利，权利与义务相统一，行使权利应服从并服务于党的事业和人民的根本利益。</p>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section class="qa" id="q5">
+    <div class="q"><span class="num">5</span><span>党的二十大相关内容：学习党的历史要增强什么、坚定什么、做到什么？</span></div>
+    <div class="a">
+      <p>按最常见、最规范的表述作答：学习党的历史，要<em>增强“四个意识”</em>（政治意识、大局意识、核心意识、看齐意识）、<em>坚定“四个自信”</em>（道路自信、理论自信、制度自信、文化自信）、<em>做到“两个维护”</em>（坚决维护习近平总书记党中央的核心、全党的核心地位，坚决维护党中央权威和集中统一领导）。</p>
+      <div class="remark"><b>备注：</b>原题表述不完整、指向不够明确。“学习党的历史”也可能对应党史学习教育的“学党史、悟思想、办实事、开新局”，或“增强历史自觉、坚定历史自信”。此处按党建通用表述作答。</div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section class="qa" id="q6">
+    <div class="q"><span class="num">6</span><span>党的二十大明确了“两个确立”，其内容是什么？确立了什么的地位？</span></div>
+    <div class="a">
+      <p>“两个确立”即：<strong>确立习近平同志党中央的核心、全党的核心地位</strong>；<strong>确立习近平新时代中国特色社会主义思想的指导地位</strong>。</p>
+      <p>其中前者确立了习近平同志<em>党中央的核心、全党的核心地位</em>，后者确立了<em>习近平新时代中国特色社会主义思想作为全党全国各族人民共同奋斗的思想武器和行动指南的指导地位</em>。“两个确立”是党在新时代取得的重大政治成果，具有决定性意义。</p>
+    </div>
+  </section>
+
+  <!-- Q7 -->
+  <section class="qa" id="q7">
+    <div class="q"><span class="num">7</span><span>习近平新时代中国特色社会主义思想的世界观和方法论集中体现在“六个坚持”，分别是什么？</span></div>
+    <div class="a">
+      <p>即“六个必须坚持”：<strong>必须坚持人民至上、必须坚持自信自立、必须坚持守正创新、必须坚持问题导向、必须坚持系统观念、必须坚持胸怀天下。</strong></p>
+    </div>
+  </section>
+
+  <!-- Q8 -->
+  <section class="qa" id="q8">
+    <div class="q"><span class="num">8</span><span>“三会一课”应当突出政治学习和教育，还应突出什么？</span></div>
+    <div class="a">
+      <p>“三会一课”应当突出政治学习和教育，突出<em>党性锻炼</em>，坚决防止表面化、形式化、娱乐化、庸俗化。</p>
+    </div>
+  </section>
+
+  <!-- Q9 -->
+  <section class="qa" id="q9">
+    <div class="q"><span class="num">9</span><span>毛泽东思想活的灵魂是实事求是、群众路线和什么？</span></div>
+    <div class="a">
+      <p><em>独立自主</em>。毛泽东思想活的灵魂就是贯穿其中的立场、观点、方法，包括<strong>实事求是、群众路线、独立自主</strong>三个基本方面。</p>
+    </div>
+  </section>
+
+  <!-- Q10 -->
+  <section class="qa" id="q10">
+    <div class="q"><span class="num">10</span><span>今年是长征胜利多少周年？</span></div>
+    <div class="a">
+      <p>今年（2026 年）是长征胜利 <em>90 周年</em>。1936 年 10 月，红一、红二、红四方面军在甘肃会宁、将台堡胜利会师，标志着万里长征的胜利结束。</p>
+    </div>
+  </section>
+
+  <!-- Q11 -->
+  <section class="qa" id="q11">
+    <div class="q"><span class="num">11</span><span>长征精神……（“坚定革命的理想和什么”）？</span></div>
+    <div class="a">
+      <p>原题缺字、表述不完整。若原意指长征精神“坚定革命的理想和<em>信念</em>”，则答案为：<strong>信念</strong>。完整表述为：长征精神“把全国人民和中华民族的根本利益看得高于一切，坚定革命的理想和信念，坚信正义事业必然胜利”。</p>
+      <div class="remark"><b>备注：</b>该题原始文字存在缺字，答案按最接近的原意推断。长征精神的完整内涵还包括：不怕艰难险阻、不惜付出牺牲；坚持独立自主、实事求是；顾全大局、严守纪律、紧密团结；紧紧依靠人民群众，同人民群众生死相依、艰苦奋斗。</div>
+    </div>
+  </section>
+
+  <!-- Q12 -->
+  <section class="qa" id="q12">
+    <div class="q"><span class="num">12</span><span>党的二十届中央委员会第五次全体会议什么时间召开？主要议程之一是什么？</span></div>
+    <div class="a">
+      <p>党的二十届中央委员会第五次全体会议（二十届五中全会）于 <em>2025 年 10 月 20 日至 23 日在北京召开</em>。</p>
+      <p>主要议程之一：<strong>研究关于制定国民经济和社会发展第十五个五年规划的建议</strong>；同时听取和讨论中共中央政治局向中央委员会所作的工作报告。</p>
+      <div class="remark"><b>备注：</b>截至本文件生成时（2026 年 10 月），该会议已召开，以上为已公开的会议信息。</div>
+    </div>
+  </section>
+
+  <!-- Q13 -->
+  <section class="qa" id="q13">
+    <div class="q"><span class="num">13</span><span>党的各项纪律中，哪一条纪律是最根本的纪律？</span></div>
+    <div class="a">
+      <p><em>政治纪律</em>。政治纪律是党最重要、最根本、最关键的纪律，是维护党的团结统一、保证党在政治上行动上同党中央保持高度一致的根本要求，是遵守党的全部纪律的重要基础。</p>
+    </div>
+  </section>
+
+  <!-- Q14 -->
+  <section class="qa" id="q14">
+    <div class="q"><span class="num">14</span><span>马克思主义在中国实现的三次历史性飞跃，第一次飞跃是什么？</span></div>
+    <div class="a">
+      <p>第一次历史性飞跃：在新民主主义革命和社会主义革命、建设时期，中国共产党把马克思列宁主义基本原理同中国革命具体实际相结合，创立了<strong>毛泽东思想</strong>。</p>
+      <p>（第二次飞跃形成中国特色社会主义理论体系，主要包括邓小平理论、“三个代表”重要思想、科学发展观；第三次飞跃创立习近平新时代中国特色社会主义思想。）</p>
+    </div>
+  </section>
+
+  <!-- Q15 -->
+  <section class="qa" id="q15">
+    <div class="q"><span class="num">15</span><span>党员的权利与义务的关系是什么？</span></div>
+    <div class="a">
+      <p>党员的权利和义务是<em>统一的、不可分割的</em>，二者相互依存、相辅相成：</p>
+      <ul>
+        <li>没有无义务的权利，也没有无权利的义务；履行义务是行使权利的前提，行使权利是履行义务的保障。</li>
+        <li>党章先规定党员义务、后规定党员权利，体现了对党员的高标准、严要求，强调义务优先、责任在先。</li>
+        <li>党员既要认真履行义务，也要正确行使权利，二者统一于为党和人民的利益而奋斗之中。</li>
+      </ul>
+      <div class="remark"><b>备注：</b>原题文字（“党的权力运动的关系”）存在缺字，此处理解为“党员的权利与义务的关系”。若原题另有所指，请以原始题干为准。</div>
+    </div>
+  </section>
+
+  <!-- Q16 -->
+  <section class="qa" id="q16">
+    <div class="q"><span class="num">16</span><span>党的二十届四中全会要求加快高水平科技自立自强，引领发展什么？</span></div>
+    <div class="a">
+      <p>加快高水平科技自立自强，<em>引领发展新质生产力</em>。即以科技创新为核心驱动力，推动科技创新与产业创新深度融合，培育和发展新质生产力，塑造发展新动能新优势。</p>
+    </div>
+  </section>
+
+  <!-- Q17 -->
+  <section class="qa" id="q17">
+    <div class="q"><span class="num">17</span><span>党的组织生活的基本形式包括哪些？</span></div>
+    <div class="a">
+      <p>党的组织生活是党的生活的重要内容，基本形式主要包括：</p>
+      <ul>
+        <li><strong>“三会一课”：</strong>支部党员大会、支部委员会会议、党小组会，以及党课；</li>
+        <li><strong>民主生活会</strong>（党员领导干部）和<strong>组织生活会</strong>（党支部）；</li>
+        <li><strong>谈心谈话</strong>；</li>
+        <li><strong>民主评议党员</strong>。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Q18 -->
+  <section class="qa" id="q18">
+    <div class="q"><span class="num">18</span><span>“年满十八周岁的中国工人、农民、军人、知识分子和其他社会阶层的先进分子，承认党的纲领……”——该说法正确吗？</span></div>
+    <div class="a">
+      <p>该表述出自<strong>《中国共产党章程》第一条</strong>关于入党条件（党员资格）的规定，属于正确表述。完整表述为：年满十八岁的中国工人、农民、军人、知识分子和其他社会阶层的先进分子，<strong>承认党的纲领和章程，愿意参加党的一个组织并在其中积极工作、执行党的决议和按期交纳党费的，可以申请加入中国共产党</strong>。</p>
+      <div class="remark"><b>备注：</b>原题以“党的纪律说法正确的是……”引出，但所给内容实为党章第一条规定的是<strong>申请入党条件</strong>，而非纪律条款，答题时应注意区分。</div>
+    </div>
+  </section>
+
+  <!-- Q19 -->
+  <section class="qa" id="q19">
+    <div class="q"><span class="num">19</span><span>中国共产党的入党誓词是什么？</span></div>
+    <div class="a">
+      <p><strong>我志愿加入中国共产党，拥护党的纲领，遵守党的章程，履行党员义务，执行党的决定，严守党的纪律，保守党的秘密，对党忠诚，积极工作，为共产主义奋斗终身，随时准备为党和人民牺牲一切，永不叛党。</strong></p>
+    </div>
+  </section>
+
+  <!-- Q20 -->
+  <section class="qa" id="q20">
+    <div class="q"><span class="num">20</span><span>“三会一课”的内容和要求是什么？（“三会”是哪三会？“一课”是哪一课？）</span></div>
+    <div class="a">
+      <p><span class="label">内容：</span>“三会”即支部党员大会、支部委员会会议、党小组会；“一课”即党课。</p>
+      <p><span class="label">要求：</span></p>
+      <ul>
+        <li>支部党员大会一般每季度召开一次；支部委员会会议和党小组会一般每月召开一次；党课一般每季度安排一次。</li>
+        <li>应突出政治学习和教育，突出党性锻炼，紧密联系党员思想和工作实际。</li>
+        <li>坚决防止表面化、形式化、娱乐化、庸俗化，注重增强针对性和实效性。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Q21 -->
+  <section class="qa" id="q21">
+    <div class="q"><span class="num">21</span><span>党的六大纪律的内涵分别是什么？</span></div>
+    <div class="a">
+      <ul>
+        <li><strong>政治纪律：</strong>党最重要、最根本、最关键的纪律，是各级党组织和全体党员在政治方向、政治立场、政治言论、政治行为方面必须遵守的规则，是维护党的团结统一、完成党的任务的保证。</li>
+        <li><strong>组织纪律：</strong>规范和处理党的各级组织之间、党组织与党员之间以及党员与党员之间关系的行为规则，核心是坚持民主集中制。</li>
+        <li><strong>廉洁纪律：</strong>党组织和党员在从事公务活动或其他与行使职权有关的活动中，应当遵守的廉洁用权的行为规则。</li>
+        <li><strong>群众纪律：</strong>党组织和党员处理与人民群众之间关系的行为规范，核心是保持党同人民群众的血肉联系。</li>
+        <li><strong>工作纪律：</strong>党组织和党员在党的各项具体工作中必须遵守的行为规则，是保证党的各项工作正常开展的重要保证。</li>
+        <li><strong>生活纪律：</strong>党员在日常社会生活和社会交往中应当遵守的行为规范，关系党的形象和威信。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Q22 -->
+  <section class="qa" id="q22">
+    <div class="q"><span class="num">22</span><span>习近平新时代中国特色社会主义思想的主要内容概述。</span></div>
+    <div class="a">
+      <p>这一思想的主要内容可概括为<strong>“十个明确”“十四个坚持”“十三个方面成就”</strong>：</p>
+      <ul>
+        <li><strong>“十个明确”：</strong>集中概括了习近平新时代中国特色社会主义思想的核心观点和基本精神。</li>
+        <li><strong>“十四个坚持”：</strong>是新时代坚持和发展中国特色社会主义的基本方略，是行动的纲领。</li>
+        <li><strong>“十三个方面成就”：</strong>系统展现了新时代党和国家事业取得的历史性成就、发生的历史性变革。</li>
+        <li>其世界观和方法论集中体现为<strong>“六个必须坚持”</strong>（人民至上、自信自立、守正创新、问题导向、系统观念、胸怀天下）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Q23 -->
+  <section class="qa" id="q23">
+    <div class="q"><span class="num">23</span><span>中国共产党百年奋斗的四大伟大成就是什么？</span></div>
+    <div class="a">
+      <p>依据《中共中央关于党的百年奋斗重大成就和历史经验的决议》，党百年奋斗取得四个方面的伟大成就：</p>
+      <ol>
+        <li>创造了新民主主义革命的伟大成就；</li>
+        <li>创造了社会主义革命和建设的伟大成就；</li>
+        <li>创造了改革开放和社会主义现代化建设的伟大成就；</li>
+        <li>创造了新时代中国特色社会主义的伟大成就。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Q24 -->
+  <section class="qa" id="q24">
+    <div class="q"><span class="num">24</span><span>今年是中国共产党建党多少周年？</span></div>
+    <div class="a">
+      <p>今年（2026 年）是中国共产党建党 <em>105 周年</em>。中国共产党于 1921 年 7 月成立，7 月 1 日为党的诞生纪念日。</p>
+    </div>
+  </section>
+
+  <!-- Q25 -->
+  <section class="qa" id="q25">
+    <div class="q"><span class="num">25</span><span>伟大建党精神的主要内容是什么？</span></div>
+    <div class="a">
+      <p><strong>坚持真理、坚守理想，践行初心、担当使命，不怕牺牲、英勇斗争，对党忠诚、不负人民。</strong></p>
+      <p>这 32 个字是中国共产党的精神之源，是党的初心使命和精神品格的集中体现。</p>
+    </div>
+  </section>
+
+  <!-- Q26 -->
+  <section class="qa" id="q26">
+    <div class="q"><span class="num">26</span><span>作为一名大学生入党积极分子，如何发挥模范带头作用？</span></div>
+    <div class="a">
+      <ul>
+        <li><strong>思想上带头：</strong>坚定理想信念，认真学习党章、党的二十大精神和习近平新时代中国特色社会主义思想，自觉向党组织靠拢，端正入党动机。</li>
+        <li><strong>学习上带头：</strong>刻苦学习专业知识和科学文化知识，努力提升本领，以优异的学习成绩起到表率作用。</li>
+        <li><strong>行动上带头：</strong>积极参加志愿服务、社会实践和集体活动，在急难险重任务面前勇于担当、冲锋在前。</li>
+        <li><strong>作风上带头：</strong>遵守校规校纪和党的各项纪律，诚实守信、勤俭节约，自觉抵御不良风气。</li>
+        <li><strong>联系同学上带头：</strong>主动关心帮助身边同学，热心服务集体，做同学们的贴心人，发挥桥梁纽带作用。</li>
+        <li><strong>经常自省：</strong>主动开展批评和自我批评，定期向党组织汇报思想，在实践中不断接受党组织的教育和考验。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="foot">
+    本文档由原始题目整理汇编而成，答案依据公开的党章及中央文件，仅供学习参考。<br>
+    党的知识以最新公布的党章、文件和权威表述为准。
+  </footer>
+
+</div>
+</body>
+</html>
